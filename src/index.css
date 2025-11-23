@@ -1,0 +1,60 @@
+/* src/index.css */
+
+/* 1. Global Reset */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa; /* Light grey background for the whole site */
+  overflow-x: hidden; /* Prevents side-scrolling on mobile */
+}
+
+/* 2. The "Hover Lift" Effect (Used in Service Cards) */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-10px); /* Moves the card up */
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important; /* Adds a deep shadow */
+}
+
+/* 3. The "Square Button" (Used in Contact Page icons) */
+.btn-square {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* 4. Navbar Link Animation (Optional but looks cool) */
+.nav-link {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #0d6efd; /* Bootstrap Primary Color */
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%; /* Underline grows on hover */
+}
+
+/* 5. Hero Image Fix (Ensures image doesn't stretch weirdly) */
+.object-fit-cover {
+  object-fit: cover;
+}
+
+/* 6. Footer Link Hover */
+.hover-white:hover {
+  color: #fff !important;
+  text-decoration: underline !important;
+}
