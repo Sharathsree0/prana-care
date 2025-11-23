@@ -2,9 +2,9 @@
 
 /* --- 1. GLOBAL RESET --- */
 :root {
-  --primary: #0d6efd;
-  --dark: #212529;
-  --light: #f8f9fa;
+  --primary: #0d6efd;       /* The Blue Color */
+  --dark: #212529;          /* The Black Color */
+  --light: #f8f9fa;         /* The Grey Background */
   --grey: #6c757d;
   font-family: 'Segoe UI', system-ui, sans-serif;
 }
@@ -15,13 +15,15 @@ body {
   background-color: var(--light);
   color: var(--dark);
   line-height: 1.6;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 a { text-decoration: none; color: inherit; transition: 0.3s; }
 ul { list-style: none; }
 img { max-width: 100%; height: auto; display: block; }
 
-/* --- 2. LAYOUT (The "Container" & "Row" System) --- */
+/* --- 2. LAYOUT (The Missing "Bootstrap" Grid) --- */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -31,7 +33,7 @@ img { max-width: 100%; height: auto; display: block; }
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -15px; /* Negative margin to offset padding */
+  margin: 0 -15px;
 }
 
 /* Make columns stack on mobile (default) */
@@ -58,7 +60,13 @@ img { max-width: 100%; height: auto; display: block; }
 .py-5 { padding-top: 3rem; padding-bottom: 3rem; }
 .my-5 { margin-top: 3rem; margin-bottom: 3rem; }
 .mb-4 { margin-bottom: 1.5rem; }
-.g-4 { gap: 1.5rem; } /* Simplified gap */
+.g-4 { gap: 1.5rem; } 
+.fw-bold { font-weight: 700; }
+.text-primary { color: var(--primary) !important; }
+.text-muted { color: var(--grey) !important; }
+.shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
+.bg-light { background-color: var(--light)!important; }
+.bg-white { background-color: #fff!important; }
 
 /* --- 3. COMPONENTS --- */
 
@@ -66,11 +74,12 @@ img { max-width: 100%; height: auto; display: block; }
 .btn {
   display: inline-block;
   padding: 10px 24px;
-  border-radius: 50px; /* Pill shape */
+  border-radius: 50px;
   font-weight: 600;
   cursor: pointer;
   border: 2px solid transparent;
   transition: all 0.3s ease;
+  text-align: center;
 }
 
 .btn-primary {
@@ -92,12 +101,11 @@ img { max-width: 100%; height: auto; display: block; }
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   height: 100%;
-  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
-.card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-.card-body { padding: 25px; }
-.card-title { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary); }
-.card-img-top { height: 200px; width: 100%; object-fit: cover; }
+.card-body { padding: 25px; flex: 1 1 auto; }
+.card-img-top { height: 200px; width: 100%; }
 
 /* Navbar */
 .navbar {
@@ -116,14 +124,18 @@ img { max-width: 100%; height: auto; display: block; }
 .navbar-brand { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
 .navbar-nav { display: flex; gap: 20px; }
 
-/* Mobile Menu Fix */
+/* Mobile Menu Hide (Shortcut for now) */
 @media (max-width: 768px) {
-  .navbar-nav { display: none; } /* Hide menu on mobile for simplicity */
-  /* Note: To make a pure CSS mobile toggle is complex. 
-     For now, this ensures the site doesn't break. */
+  .navbar-nav { display: none; } 
 }
 
 /* Footer */
 footer { background-color: var(--dark); color: white; margin-top: auto; }
-.text-secondary { color: #aab0b6; }
-.text-primary { color: var(--primary); }
+
+/* --- 4. ANIMATIONS (Your Hover Effects) --- */
+.hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.hover-lift:hover { transform: translateY(-10px); box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important; }
+.object-fit-cover { object-fit: cover; }
+html {
+  scroll-behavior: smooth; /* <--- THE MAGIC LINE */
+}

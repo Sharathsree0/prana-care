@@ -1,52 +1,44 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function Navbar() {
-  const location = useLocation(); // This hooks gets the current URL path
-
-  // Helper function to check if link is active
-  const isActive = (path) => location.pathname === path ? "nav-link active fw-bold text-primary" : "nav-link";
+  // Mobile Menu Logic (Optional, keeps it working on phones)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
       <div className="container">
-        {/* Logo Section */}
-        <Link className="navbar-brand fw-bold text-primary" to="/">
+        {/* Logo scrolls to top */}
+        <a className="navbar-brand fw-bold text-primary" href="#home">
            WeCare<span className="text-dark">Nursing</span>
-        </Link>
+        </a>
 
-        {/* Mobile Toggle Button */}
+        {/* Mobile Toggle */}
         <button 
           className="navbar-toggler" 
           type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#navbarNav"
+          onClick={() => setIsOpen(!isOpen)}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Menu Links */}
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
+        <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`} id="navbarNav">
+          <ul className="navbar-nav ms-auto align-items-center">
             <li className="nav-item">
-              <Link className={isActive("/")} to="/">Home</Link>
+              <a className="nav-link" href="#home">Home</a>
             </li>
             <li className="nav-item">
-              <Link className={isActive("/about")} to="/about">About Us</Link>
+              <a className="nav-link" href="#about">About Us</a>
             </li>
             <li className="nav-item">
-              <Link className={isActive("/services")} to="/services">Services</Link>
+              <a className="nav-link" href="#services">Services</a>
             </li>
             <li className="nav-item">
-              <Link className={isActive("/contact")} to="/contact">Contact</Link>
+              <a className="nav-link" href="#contact">Contact</a>
+            </li>
+            <li className="nav-item ms-lg-2">
+              <a className="btn btn-primary rounded-pill px-4" href="#contact">Book Now</a>
             </li>
           </ul>
-          
-          {/* Call to Action Button */}
-          <div className="ms-lg-3 mt-2 mt-lg-0">
-             <Link to="/contact" className="btn btn-primary rounded-pill px-4">
-               Book Now
-             </Link>
-          </div>
         </div>
       </div>
     </nav>
