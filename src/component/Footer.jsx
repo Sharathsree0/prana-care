@@ -10,7 +10,7 @@ export default function Footer() {
 
           {/* brand */}
           <div className="footer-col">
-            <h3 className="footer-logo">PranaCare<span>Nursing</span></h3>
+            <h3 className="footer-logo">PranaHome<span>Nursing</span></h3>
 
             <p className="footer-desc">
               Professional home nursing and elderly care services delivered with compassion.
@@ -49,12 +49,12 @@ export default function Footer() {
             <h4 className="footer-title">Contact Us</h4>
 
             <p className="footer-text"><strong>Phone:</strong> +91 9092630929</p>
-            <p className="footer-text"><strong>Email:</strong> help@Pranacare.com</p>
+            <p className="footer-text"><strong>Email:</strong> help@PranaCare.com</p>
           </div>
         </div>
 
         <div className="footer-bottom">
-          © {new Date().getFullYear()} PranaCare Home Nursing. All rights reserved.
+          © {new Date().getFullYear()} PranaHome Nursing. All rights reserved.
         </div>
 
       </div>

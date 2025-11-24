@@ -10,7 +10,7 @@ export default function Navbar() {
         
         {/* Logo */}
         <a href="#home" className="nav-logo">
-          PranaCare<span>Nursing</span>
+          PranaHome<span>Nursing</span>
         </a>
 
         {/* Mobile toggle */}
