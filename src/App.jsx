@@ -5,6 +5,7 @@ import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
 import Footer from './component/Footer';
+import FloatingButtons from './component/FloatingButtons';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
       </section>
 
       <Footer />
+      <FloatingButtons /> {/* <--- ADD THIS HERE */}
     </div>
   );
 }
