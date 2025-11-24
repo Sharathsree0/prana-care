@@ -1,49 +1,41 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import "./FloatingButtons.css";
 
 export default function FloatingButtons() {
   const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setShowTopBtn(true);
-      } else {
-        setShowTopBtn(false);
-      }
+    const onScroll = () => {
+      setShowTopBtn(window.scrollY > 350);
     };
-
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
+    
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className="floating-container">
-      {/* WhatsApp Button with Official Logo Image */}
-      <a 
-        href="https://wa.me/919876543210?text=Hello%20WeCare,%20I%20need%20more%20info."
-        className="btn-float whatsapp"
+    <div className="floating-wrapper">
+
+      {/* WhatsApp */}
+      <a
+        href="https://wa.me/9092630929?text=Hello%20WeCare,%20I%20need%20more%20info."
         target="_blank"
         rel="noopener noreferrer"
-        style={{ padding: '0', overflow: 'hidden' }} // shortcut style tweak
+        className="floating-btn whatsapp-btn"
       >
-        {/* THE SHORTCUT: Using the official SVG image directly */}
-        <img 
-          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
-          alt="WhatsApp" 
-          style={{ width: '35px', height: '35px' }} 
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+          alt="WhatsApp"
         />
       </a>
 
-      {/* Back to Top Button (Keep this simple) */}
+      {/* back to top */}
       {showTopBtn && (
-        <button onClick={scrollToTop} className="btn-float top-btn">
+        <button className="floating-btn top-btn" onClick={scrollToTop}>
           ↑
         </button>
       )}

@@ -1,51 +1,62 @@
+import "./Footer.css";
+
 export default function Footer() {
   return (
-    <footer className="bg-dark text-light py-5 mt-auto">
-      <div className="container">
-        <div className="row g-4">
-          
-          <div className="col-lg-4 col-md-6">
-            <h5 className="h3 fw-bold text-primary mb-3">WeCare</h5>
-            <p className="text-secondary small">
+    <footer id="footer" className="footer">
+
+      <div className="footer-container">
+
+        <div className="footer-grid">
+
+          {/* brand */}
+          <div className="footer-col">
+            <h3 className="footer-logo">WeCare<span>Nursing</span></h3>
+
+            <p className="footer-desc">
               Professional home nursing and elderly care services delivered with compassion.
             </p>
-            <div className="d-flex gap-3 mt-3">
-              <a href="#" className="text-light text-decoration-none">FB</a>
-              <a href="#" className="text-light text-decoration-none">IG</a>
+
+            <div className="footer-social">
+              <a href="#">FB</a>
+              <a href="#">IG</a>
             </div>
           </div>
 
-          <div className="col-lg-2 col-md-6">
-            <h5 className="text-white mb-3">Links</h5>
-            <ul className="list-unstyled text-secondary">
-              {/* CHANGED Links to 'a' tags */}
-              <li className="mb-2"><a href="#home" className="text-secondary text-decoration-none hover-white">Home</a></li>
-              <li className="mb-2"><a href="#about" className="text-secondary text-decoration-none hover-white">About Us</a></li>
-              <li className="mb-2"><a href="#services" className="text-secondary text-decoration-none hover-white">Services</a></li>
-              <li className="mb-2"><a href="#contact" className="text-secondary text-decoration-none hover-white">Contact</a></li>
+          {/* links */}
+          <div className="footer-col">
+            <h4 className="footer-title">Links</h4>
+            <ul className="footer-links">
+              <li><a href="#home">Home</a></li>
+              <li><a href="#about">About Us</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#contact">Contact</a></li>
             </ul>
           </div>
 
-          <div className="col-lg-3 col-md-6">
-            <h5 className="text-white mb-3">Our Care</h5>
-            <ul className="list-unstyled text-secondary">
-              <li className="mb-2">Elderly Care</li>
-              <li className="mb-2">Post-Surgery Nursing</li>
-              <li className="mb-2">Physiotherapy</li>
-              <li className="mb-2">Mother & Baby Care</li>
+          {/* Services list */}
+          <div className="footer-col">
+            <h4 className="footer-title">Our Care</h4>
+            <ul className="footer-list">
+              <li>Elderly Care</li>
+              <li>Post-Surgery Nursing</li>
+              <li>Physiotherapy</li>
+              <li>Mother & Baby Care</li>
             </ul>
           </div>
 
-          <div className="col-lg-3 col-md-6">
-            <h5 className="text-white mb-3">Contact Us</h5>
-            <p className="text-secondary mb-2"><strong>Phone:</strong> +91 98765 43210</p>
-            <p className="text-secondary mb-2"><strong>Email:</strong> help@wecare.com</p>
+          {/* contact */}
+          <div className="footer-col">
+            <h4 className="footer-title">Contact Us</h4>
+
+            <p className="footer-text"><strong>Phone:</strong> +91 9092630929</p>
+            <p className="footer-text"><strong>Email:</strong> help@wecare.com</p>
           </div>
         </div>
-        
-        <div className="border-top border-secondary mt-5 pt-3 text-center text-secondary small">
+
+        <div className="footer-bottom">
           © {new Date().getFullYear()} WeCare Home Nursing. All rights reserved.
         </div>
+
       </div>
     </footer>
   );
