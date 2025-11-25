@@ -3,6 +3,10 @@
 .hero {
   background: radial-gradient(circle at top, #e0fbea 0, #f4f7fb 40%, #ffffff 100%);
   padding: 60px 0 70px;
+  min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .hero-container {

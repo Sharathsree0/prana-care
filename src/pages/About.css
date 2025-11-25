@@ -2,6 +2,7 @@
 
 .about {
   background: #ffffff;
+  
 }
 
 .about-container {
@@ -15,6 +16,10 @@
 .about-mission {
   padding: 70px 0 60px;
   background: #ffffff;
+   min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .mission-grid {

@@ -3,6 +3,10 @@
 .services {
   padding: 70px 0;
   background: #ffffff;
+   min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .services-container {

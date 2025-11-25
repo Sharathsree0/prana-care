@@ -22,7 +22,7 @@ export default function Hero() {
 
           <div className="hero-actions">
             <a href="#contact" className="hero-btn hero-btn-primary">
-              Get Started
+              Book Now
             </a>
             <a href="#services" className="hero-btn hero-btn-outline">
               Our Services
