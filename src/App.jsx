@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";import Navbar from './component/Navbar';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Navbar from './component/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
 import Services from './pages/Services';
@@ -9,37 +10,18 @@ import AdminLogin from './Admin/Adminlogin';
 import AdminLayout from "./Admin/AdminLayout";
 import AdminDashboard from "./Admin/AdminDashboard";
 
-// /* Admin area components (make sure these files exist under src/admin/...) */
-// import AdminLogin from "./admin/pages/AdminLogin";
-// import AdminLayout from "./admin/layout/AdminLayout";
-// import AdminDashboard from "./admin/pages/AdminDashboard";
-// import AdminLeads from "./admin/pages/AdminLeads"; // create later
-// import AdminServices from "./admin/pages/AdminServices"; // create later
-// import AdminSettings from "./admin/pages/AdminSettings"; // create later (optional)
+// NOTE: We commented these out because the files don't exist yet!
+// import AdminLeads from "./Admin/AdminLeads"; 
+// import AdminServices from "./Admin/AdminServices"; 
 
 export default function App() {
-  /* Public site markup used for the root "/" route */
   const PublicSite = (
     <>
       <Navbar />
-
-      {/* Section anchors used by the navbar links */}
-      <section id="home">
-        <Home />
-      </section>
-
-      <section id="about">
-        <About />
-      </section>
-
-      <section id="services">
-        <Services />
-      </section>
-
-      <section id="contact">
-        <Contact />
-      </section>
-
+      <section id="home"><Home /></section>
+      <section id="about"><About /></section>
+      <section id="services"><Services /></section>
+      <section id="contact"><Contact /></section>
       <Footer />
       <FloatingButtons />
     </>
@@ -48,21 +30,22 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public site (stacked single-page sections) */}
+        {/* 1. Public Website Route */}
         <Route path="/" element={PublicSite} />
 
-        {/* Admin auth page (login) */}
+        {/* 2. Admin Login Route */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
-        {/* Protected admin routes (AdminLayout checks localStorage 'adminAuth') */}
+        {/* 3. Protected Admin Dashboard Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          <Route path="leads" element={<AdminLeads />} />
-          <Route path="services" element={<AdminServices />} />
-          <Route path="settings" element={<AdminSettings />} />
+          
+          {/* SHORTCUT: We comment these out until you create the files */}
+          {/* <Route path="leads" element={<AdminLeads />} /> */}
+          {/* <Route path="services" element={<AdminServices />} /> */}
         </Route>
 
-        {/* fallback: redirect unknown admin paths to admin login, others to home */}
+        {/* 4. Fallbacks */}
         <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

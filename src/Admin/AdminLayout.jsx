@@ -2,7 +2,7 @@
 import { Outlet, Navigate, useNavigate } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
 import AdminTopbar from "./AdminTopbar";
-
+import "./Admin.css"
 export default function AdminLayout() {
   const isAuth = localStorage.getItem("adminAuth") === "true";
   const navigate = useNavigate();
