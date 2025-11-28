@@ -29,7 +29,6 @@ export default function Navbar() {
             <a href="#contact" className="nav-btn">Book Now</a>
           </li>
         </ul>
-
       </div>
     </nav>
   );

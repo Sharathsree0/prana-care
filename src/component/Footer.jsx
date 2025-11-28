@@ -17,8 +17,8 @@ export default function Footer() {
             </p>
 
             <div className="footer-social">
-              <a href="#">FB</a>
-              <a href="#">IG</a>
+              <a href="">FB</a>
+              <a href="">IG</a>
             </div>
           </div>
 
