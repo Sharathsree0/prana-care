@@ -12,6 +12,7 @@ import AdminDashboard from "./Admin/AdminDashboard";
 import AdminLeads from "./Admin/AdminLeads";
 import AdminServices from "./Admin/AdminServices";
 import AdminSettings from "./Admin/AdminSettings";
+import AdminGallery from "./Admin/AdminGallery";
 
 // NOTE: We commented these out because the files don't exist yet!
 // import AdminLeads from "./Admin/AdminLeads"; 
@@ -44,6 +45,7 @@ export default function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="leads" element={<AdminLeads />} />       
           <Route path="services" element={<AdminServices />} /> 
+          <Route path="gallery" element={<AdminGallery />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 

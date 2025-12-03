@@ -7,7 +7,7 @@ export default function Services() {
       id: 1,
       title: "Home Nursing",
       desc: "Professional nursing care for post-surgery recovery, wound dressing, and injections at home.",
-      img: "https://images.unsplash.com/photo-1576765611791-374775097460?auto=format&fit=crop&q=80&w=600",
+      img: "https://placehold.co/600x400/red/white?text=Red+Image",
       link: "#contact",
     },
     {
@@ -39,6 +39,7 @@ export default function Services() {
           {servicesData.map((service) => (
             <ServiceCard
               key={service.id}
+              id={service.id}
               title={service.title}
               desc={service.desc}
               img={service.img}

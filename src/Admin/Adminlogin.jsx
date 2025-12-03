@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // 1. Import hook
+import { useNavigate } from "react-router-dom";
 import "./AdminAuth.css";
 
 export default function AdminLogin() {
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // 2. Initialize hook
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -12,11 +12,16 @@ export default function AdminLogin() {
     const email = e.target.email.value;
     const pass = e.target.password.value;
 
-    if (email === "admin@gmail.com" && pass === "admin123") {
+    // 1. GET STORED PASSWORD (or use default 'admin123')
+    // This allows the password to be changed from the Settings page
+    const storedPass = localStorage.getItem("adminPass") || "admin123";
+
+    // 2. CHECK AGAINST STORED PASSWORD
+    if (email === "admin@gmail.com" && pass === storedPass) {
       localStorage.setItem("adminAuth", "true");
-      // 3. Use navigate instead of window.location
-      // "replace: true" prevents going back to login with the back button
-      navigate("/admin", { replace: true }); 
+      
+      // Navigate to the main admin layout
+      navigate("/admin", { replace: true });
     } else {
       setMessage("Invalid login credentials ❌");
     }

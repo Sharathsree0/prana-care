@@ -1,19 +1,38 @@
-// src/Admin/AdminLeads.jsx
+import { useState, useEffect } from "react";
 import "./Admin.css";
 
 export default function AdminLeads() {
-  // Mock data - in a real app, this comes from a database
-  const leads = [
-    { id: 1, name: "Ramesh Kumar", phone: "+91 98765 43210", service: "Home Nursing", status: "New", date: "2023-10-24" },
-    { id: 2, name: "Sita Devi", phone: "+91 91234 56789", service: "Physiotherapy", status: "Contacted", date: "2023-10-23" },
-    { id: 3, name: "Ajay Singh", phone: "+91 99887 76655", service: "Elderly Care", status: "Closed", date: "2023-10-22" },
-  ];
+  // FIX: Initialize state directly from LocalStorage
+  const [leads, setLeads] = useState(() => {
+    const storedLeads = localStorage.getItem("adminLeads");
+    return storedLeads ? JSON.parse(storedLeads) : [
+      { id: 1, name: "Ramesh Kumar", phone: "9876543210", service: "Home Nursing", status: "New", date: "2023-10-24" },
+      { id: 2, name: "Sita Devi", phone: "9123456789", service: "Physiotherapy", status: "Contacted", date: "2023-10-23" },
+    ];
+  });
+
+  // Save changes whenever 'leads' updates
+  useEffect(() => {
+    localStorage.setItem("adminLeads", JSON.stringify(leads));
+  }, [leads]);
+
+  const handleDelete = (id) => {
+    if (window.confirm("Delete this lead?")) {
+      setLeads(leads.filter((l) => l.id !== id));
+    }
+  };
+
+  const handleStatusChange = (id, newStatus) => {
+    setLeads(leads.map((l) => 
+      l.id === id ? { ...l, status: newStatus } : l
+    ));
+  };
 
   return (
     <section>
       <div className="admin-header-row">
         <h2>Leads Management</h2>
-        <button className="admin-btn">Export CSV</button>
+        <button className="admin-btn" onClick={() => alert("Export feature coming soon!")}>Export CSV</button>
       </div>
 
       <div className="admin-table-container">
@@ -32,21 +51,29 @@ export default function AdminLeads() {
             {leads.map((lead) => (
               <tr key={lead.id}>
                 <td>{lead.name}</td>
-                <td>{lead.phone}</td>
+                <td><a href={`tel:${lead.phone}`} style={{textDecoration:'none', color:'#059669'}}>{lead.phone}</a></td>
                 <td>{lead.service}</td>
                 <td>{lead.date}</td>
                 <td>
-                  <span className={`status-badge status-${lead.status.toLowerCase()}`}>
-                    {lead.status}
-                  </span>
+                  <select 
+                    className={`status-badge status-${lead.status.toLowerCase()}`}
+                    value={lead.status}
+                    onChange={(e) => handleStatusChange(lead.id, e.target.value)}
+                    style={{ border: "none", cursor: "pointer" }}
+                  >
+                    <option value="New">New</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="Closed">Closed</option>
+                  </select>
                 </td>
                 <td>
-                  <button className="action-btn">Call</button>
+                  <button className="action-btn" onClick={() => handleDelete(lead.id)} style={{color: 'crimson', background: '#fee2e2'}}>Delete</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {leads.length === 0 && <p style={{padding:20, textAlign:'center', color:'#888'}}>No leads found.</p>}
       </div>
     </section>
   );

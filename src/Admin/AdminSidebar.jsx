@@ -32,6 +32,9 @@ export default function AdminSidebar() {
         <NavLink to="/admin/services" className="nav-item">
           Services
         </NavLink>
+        
+        <NavLink to="/admin/gallery" className="nav-item">Gallery
+        </NavLink>
 
         <NavLink to="/admin/settings" className="nav-item">
           Settings
