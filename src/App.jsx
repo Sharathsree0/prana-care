@@ -9,6 +9,9 @@ import FloatingButtons from './component/FloatingButtons';
 import AdminLogin from './Admin/Adminlogin';
 import AdminLayout from "./Admin/AdminLayout";
 import AdminDashboard from "./Admin/AdminDashboard";
+import AdminLeads from "./Admin/AdminLeads";
+import AdminServices from "./Admin/AdminServices";
+import AdminSettings from "./Admin/AdminSettings";
 
 // NOTE: We commented these out because the files don't exist yet!
 // import AdminLeads from "./Admin/AdminLeads"; 
@@ -39,10 +42,9 @@ export default function App() {
         {/* 3. Protected Admin Dashboard Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          
-          {/* SHORTCUT: We comment these out until you create the files */}
-          {/* <Route path="leads" element={<AdminLeads />} /> */}
-          {/* <Route path="services" element={<AdminServices />} /> */}
+          <Route path="leads" element={<AdminLeads />} />       
+          <Route path="services" element={<AdminServices />} /> 
+          <Route path="settings" element={<AdminSettings />} />
         </Route>
 
         {/* 4. Fallbacks */}

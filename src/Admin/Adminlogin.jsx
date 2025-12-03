@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 1. Import hook
 import "./AdminAuth.css";
 
 export default function AdminLogin() {
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // 2. Initialize hook
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -12,7 +14,9 @@ export default function AdminLogin() {
 
     if (email === "admin@gmail.com" && pass === "admin123") {
       localStorage.setItem("adminAuth", "true");
-      window.location.href = "/admin/dashboard";
+      // 3. Use navigate instead of window.location
+      // "replace: true" prevents going back to login with the back button
+      navigate("/admin", { replace: true }); 
     } else {
       setMessage("Invalid login credentials ❌");
     }
