@@ -13,6 +13,8 @@ import AdminLeads from "./Admin/AdminLeads";
 import AdminServices from "./Admin/AdminServices";
 import AdminSettings from "./Admin/AdminSettings";
 import AdminGallery from "./Admin/AdminGallery";
+import AdminTeam from "./Admin/AdminTeam";
+import AdminAbout from "./Admin/AdminAbout";
 
 // NOTE: We commented these out because the files don't exist yet!
 // import AdminLeads from "./Admin/AdminLeads"; 
@@ -44,6 +46,8 @@ export default function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="leads" element={<AdminLeads />} />       
+          <Route path="team" element={<AdminTeam />} />
+          <Route path="about" element={<AdminAbout />} />
           <Route path="services" element={<AdminServices />} /> 
           <Route path="gallery" element={<AdminGallery />} />
           <Route path="settings" element={<AdminSettings />} />

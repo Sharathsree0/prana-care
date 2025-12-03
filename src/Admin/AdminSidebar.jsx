@@ -13,9 +13,9 @@ export default function AdminSidebar() {
   return (
     <aside className="admin-sidebar">
       <div className="admin-brand">
-        <div className="brand-symbol">WC</div>
+        <div className="brand-symbol">PC</div>
         <div>
-          <div className="brand-name">WeCare</div>
+          <div className="brand-name">Prana_Care</div>
           <div className="brand-sub">Admin</div>
         </div>
       </div>
@@ -29,11 +29,17 @@ export default function AdminSidebar() {
           Leads
         </NavLink>
 
+        <NavLink to="/admin/team" className="nav-item">Team
+        </NavLink>
+
         <NavLink to="/admin/services" className="nav-item">
           Services
         </NavLink>
-        
+
         <NavLink to="/admin/gallery" className="nav-item">Gallery
+        </NavLink>
+
+        <NavLink to="/admin/about" className="nav-item">About Info
         </NavLink>
 
         <NavLink to="/admin/settings" className="nav-item">

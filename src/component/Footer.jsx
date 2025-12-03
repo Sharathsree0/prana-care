@@ -10,7 +10,8 @@ export default function Footer() {
 
           {/* brand */}
           <div className="footer-col">
-            <h3 className="footer-logo">PranaHome<span>Nursing</span></h3>
+            {/* UPDATED LOGO */}
+            <h3 className="footer-logo">PranaHome<span>Care</span></h3>
 
             <p className="footer-desc">
               Professional home nursing and elderly care services delivered with compassion.
@@ -53,8 +54,9 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* UPDATED COPYRIGHT */}
         <div className="footer-bottom">
-          © {new Date().getFullYear()} PranaHome Nursing. All rights reserved.
+          © {new Date().getFullYear()} PranaCare. All rights reserved.
         </div>
 
       </div>

@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import "./ServiceCard.css";
 
-export default function ServiceCard({ id, title, desc, img, link }) {
+// Added 'price' prop
+export default function ServiceCard({ id, title, price, desc, img, link }) {
   
-  // 1. Helper to load images for THIS specific service ID
   const loadImages = () => {
     const stored = localStorage.getItem(`gallery_service_${id}`);
-    return stored ? JSON.parse(stored) : [img]; // Fallback to default image
+    return stored ? JSON.parse(stored) : [img];
   };
 
   const [gallery, setGallery] = useState(loadImages);
   const [index, setIndex] = useState(0);
 
-  // 2. LIVE LISTENER (Crucial for updates!)
+  // Live Listener
   useEffect(() => {
     const handleStorage = () => {
       setGallery(loadImages());
@@ -20,9 +20,9 @@ export default function ServiceCard({ id, title, desc, img, link }) {
     };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
-  }, [id]); // Re-run if ID changes
+  }, [id]);
 
-  // 3. Slideshow Timer
+  // Slideshow
   useEffect(() => {
     if (gallery.length <= 1) return;
     const timer = setInterval(() => setIndex((i) => (i + 1) % gallery.length), 3000);
@@ -42,6 +42,10 @@ export default function ServiceCard({ id, title, desc, img, link }) {
 
       <div className="service-content">
         <h3>{title}</h3>
+        
+        {/* 🔥 DISPLAY THE PRICE HERE */}
+        {price && <h4 style={{color: '#059669', marginBottom: '8px', fontSize: '15px'}}>{price}</h4>}
+        
         <p>{desc}</p>
         <a href={link} className="service-btn">Learn More</a>
       </div>
