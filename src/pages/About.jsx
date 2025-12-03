@@ -2,17 +2,29 @@ import { useState, useEffect } from "react";
 import "./About.css";
 
 export default function About() {
-  // FIX: Load images immediately (Lazy Init) to stop the useEffect error
-  const [gallery] = useState(() => {
+  // 1. Helper to load images safely
+  const loadImages = () => {
     const stored = localStorage.getItem("gallery_about");
     return stored 
       ? JSON.parse(stored) 
       : ["https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800"];
-  });
+  };
 
+  const [gallery, setGallery] = useState(loadImages);
   const [index, setIndex] = useState(0);
 
-  // Slideshow Timer
+  // 2. LIVE LISTENER (This is what you are missing!)
+  useEffect(() => {
+    const handleStorage = () => {
+      setGallery(loadImages());
+      setIndex(0); // Reset slideshow
+    };
+    // Listen for the special signal from Admin
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
+  // 3. Slideshow Timer
   useEffect(() => {
     if (gallery.length <= 1) return;
     const timer = setInterval(() => setIndex((i) => (i + 1) % gallery.length), 3000);
@@ -29,8 +41,6 @@ export default function About() {
     <div id="about" className="about">
       <section className="about-mission">
         <div className="about-container mission-grid">
-          
-          {/* DYNAMIC IMAGE SECTION */}
           <div className="mission-image">
             <img
               key={index}
@@ -39,7 +49,6 @@ export default function About() {
               style={{ transition: "opacity 0.5s", opacity: 1, width: "100%", borderRadius: "22px" }}
             />
           </div>
-
           <div className="mission-text">
             <h2>Our Mission</h2>
             <p className="mission-lead">To provide hospital-quality care in the comfort of your own home.</p>
@@ -48,7 +57,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* TEAM SECTION */}
       <section className="about-team">
         <div className="about-container">
           <div className="team-header">

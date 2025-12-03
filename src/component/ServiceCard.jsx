@@ -2,14 +2,27 @@ import { useState, useEffect } from "react";
 import "./ServiceCard.css";
 
 export default function ServiceCard({ id, title, desc, img, link }) {
-  // FIX: Read LocalStorage during initialization using the ID prop
-  const [gallery] = useState(() => {
+  
+  // 1. Helper to load images for THIS specific service ID
+  const loadImages = () => {
     const stored = localStorage.getItem(`gallery_service_${id}`);
-    return stored ? JSON.parse(stored) : [img]; // Use default img if no gallery
-  });
+    return stored ? JSON.parse(stored) : [img]; // Fallback to default image
+  };
 
+  const [gallery, setGallery] = useState(loadImages);
   const [index, setIndex] = useState(0);
 
+  // 2. LIVE LISTENER (Crucial for updates!)
+  useEffect(() => {
+    const handleStorage = () => {
+      setGallery(loadImages());
+      setIndex(0);
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [id]); // Re-run if ID changes
+
+  // 3. Slideshow Timer
   useEffect(() => {
     if (gallery.length <= 1) return;
     const timer = setInterval(() => setIndex((i) => (i + 1) % gallery.length), 3000);

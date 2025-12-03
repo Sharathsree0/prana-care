@@ -1,43 +1,38 @@
-// src/Admin/AdminGallery.jsx
 import { useState } from "react";
 import "./Admin.css";
 
 export default function AdminGallery() {
-  // 1. Manage the active section
   const [section, setSection] = useState("gallery_hero");
 
-  // 2. FIX: Lazy Initialize images for the default section
-  // This loads the "Hero" images immediately on first load, so no useEffect is needed.
+  // Lazy Init
   const [images, setImages] = useState(() => {
     const stored = localStorage.getItem("gallery_hero");
     return stored ? JSON.parse(stored) : [];
   });
 
-  // 3. Save to LocalStorage whenever images change
+  // --- THE CONTROLLER LOGIC ---
   const updateGallery = (newImages) => {
+    // 1. Update Admin View
     setImages(newImages);
+    
+    // 2. Update Database (LocalStorage)
     localStorage.setItem(section, JSON.stringify(newImages));
+    
+    // 3. SEND SIGNAL to User Side (Hero, About, Services)
+    // This makes it update instantly in the same tab/browser
+    window.dispatchEvent(new Event("storage"));
   };
 
-  // 4. FIX: Handle Section Change (Load data here instead of useEffect)
   const handleSectionChange = (e) => {
     const newSection = e.target.value;
-    setSection(newSection); // Update dropdown UI
-
-    // Fetch data for the new section immediately
+    setSection(newSection);
     const stored = localStorage.getItem(newSection);
-    if (stored) {
-      setImages(JSON.parse(stored));
-    } else {
-      setImages([]);
-    }
+    setImages(stored ? JSON.parse(stored) : []);
   };
 
   const handleAdd = () => {
     const url = prompt(`Paste image URL for ${section.replace("gallery_", "").toUpperCase()}:`);
-    if (url) {
-       updateGallery([...images, url]);
-    }
+    if (url) updateGallery([...images, url]);
   };
 
   const handleDelete = (indexToDelete) => {
@@ -50,13 +45,11 @@ export default function AdminGallery() {
     <section>
       <div className="admin-header-row">
         <h2>Website Gallery Manager</h2>
-        
-        {/* DROPDOWN TO SELECT SECTION */}
         <select 
           className="admin-btn" 
           style={{backgroundColor: "white", color: "#333", border: "1px solid #ccc"}}
           value={section}
-          onChange={handleSectionChange} // <--- Calls our new handler
+          onChange={handleSectionChange}
         >
           <option value="gallery_hero">Hero (Home Banner)</option>
           <option value="gallery_about">About Us Image</option>
@@ -64,27 +57,15 @@ export default function AdminGallery() {
           <option value="gallery_service_2">Service: Elderly Care</option>
           <option value="gallery_service_3">Service: Physiotherapy</option>
         </select>
-
         <button className="admin-btn" onClick={handleAdd}>+ Add Photo</button>
       </div>
 
       <div className="stat-grid">
-        {images.length === 0 && <p style={{color: '#888'}}>No images in this section yet.</p>}
-        
+        {images.length === 0 && <p style={{color: '#888'}}>No images. Add one to see it live!</p>}
         {images.map((img, index) => (
           <div key={index} className="stat-card" style={{padding: 10}}>
-            <img 
-              src={img} 
-              alt="Gallery" 
-              style={{width: "100%", height: "150px", objectFit: "cover", borderRadius: "8px"}} 
-            />
-            <button 
-              className="action-btn" 
-              onClick={() => handleDelete(index)}
-              style={{marginTop: 10, width: "100%", background: "#fee2e2", color: "crimson"}}
-            >
-              Remove
-            </button>
+            <img src={img} alt="Gallery" style={{width: "100%", height: "150px", objectFit: "cover", borderRadius: "8px"}} />
+            <button className="action-btn" onClick={() => handleDelete(index)} style={{marginTop: 10, width: "100%", background: "#fee2e2", color: "crimson"}}>Remove</button>
           </div>
         ))}
       </div>
