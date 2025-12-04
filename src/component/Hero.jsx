@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Hero.css";
 import dbs from "../firebase";
@@ -13,14 +14,12 @@ export default function Hero() {
   const [gallery, setGallery] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // ---------- FETCH HERO TEXT ----------
   const fetchHeroText = async () => {
     const data = await dbs.readDocument("site_content", "home_hero");
 
     if (data) {
       setContent(data);
     } else {
-      // load default if missing
       const defaultHero = {
         tagline: "Home Nursing • Elderly Care • Physiotherapy",
         title: "Compassionate Care,",
@@ -32,7 +31,6 @@ export default function Hero() {
     }
   };
 
-  // ---------- FETCH HERO GALLERY ----------
   const fetchHeroGallery = async () => {
     const data = await dbs.readCollection("gallery_hero");
     const urls = data.map((item) => item.url);
@@ -40,13 +38,11 @@ export default function Hero() {
     setGallery(urls.length > 0 ? urls : ["https://dummyimage.com/600x400/343a40/6c757d"]);
   };
 
-  // ---------- ON LOAD ----------
   useEffect(() => {
     fetchHeroText();
     fetchHeroGallery();
   }, []);
 
-  // ---------- SLIDESHOW ----------
   useEffect(() => {
     if (gallery.length <= 1) return;
 
@@ -61,7 +57,6 @@ export default function Hero() {
     <header id="home" className="hero">
       <div className="hero-container">
 
-        {/* LEFT SIDE TEXT */}
         <div className="hero-left">
           <p className="hero-tagline">{content.tagline}</p>
 
@@ -93,7 +88,6 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* RIGHT SIDE SLIDESHOW */}
         <div className="hero-right">
           <div className="hero-image-wrapper">
             <img

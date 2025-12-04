@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import dbs from "../firebase";
 
@@ -8,7 +9,6 @@ export default function AdminTopbar() {
     avatar: "A"
   });
 
-  // Load admin profile from Firestore
   const loadAdmin = async () => {
     const data = await dbs.readDocument("admin_settings", "profile");
 
@@ -34,14 +34,12 @@ export default function AdminTopbar() {
       <div className="topbar-right">
         <div className="topbar-user">
           
-          {/* Avatar */}
           <div className="user-avatar">
             {admin.avatar?.startsWith("http")
               ? <img src={admin.avatar} alt="Admin" />
               : admin.avatar || "A"}
           </div>
 
-          {/* Name + Email */}
           <div className="user-meta">
             <div className="user-name">{admin.name}</div>
             <div className="user-email">{admin.email}</div>

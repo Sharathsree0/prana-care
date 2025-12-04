@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Admin.css";
@@ -11,19 +12,17 @@ export default function AdminDashboard() {
     recentLeads: []
   });
 
-  // -------- LOAD ALL DASHBOARD DATA --------
   const loadDashboardData = async () => {
-    // Fetch Leads
+    
     const leads = await dbs.readCollection("admin_leads");
 
-    // Fetch Services Count
     const services = await dbs.readCollection("services");
 
     setStats({
       totalLeads: leads.length,
       openLeads: leads.filter((l) => l.status !== "Closed").length,
       servicesCount: services.length,
-      recentLeads: leads.slice(0, 3) // latest 3 leads
+      recentLeads: leads.slice(0, 3) 
     });
   };
 
@@ -39,7 +38,6 @@ export default function AdminDashboard() {
         <p>Here is what's happening with your business today.</p>
       </div>
 
-      {/* STAT CARDS */}
       <div className="stat-grid">
         <div className="stat-card">
           <div className="stat-value">{stats.totalLeads}</div>
@@ -62,7 +60,6 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* RECENT LEADS */}
       <div className="recent-section">
         <div className="admin-header-row">
           <h3>Recent Leads</h3>

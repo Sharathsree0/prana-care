@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Admin.css";
-import dbs from "../firebase"; // your Firestore helper
+import dbs from "../firebase";
 
 export default function AdminSettings() {
   const [newPassword, setNewPassword] = useState("");
@@ -13,9 +14,6 @@ export default function AdminSettings() {
   const [companyPhone, setCompanyPhone] = useState("");
   const [phoneMsg, setPhoneMsg] = useState("");
 
-  // ------------------------------
-  // 1. LOAD PASSWORD & TODOs
-  // ------------------------------
   const loadPhone = async () => {
     const data = await dbs.readDocument("admin_settings", "phone");
     if (data) {
@@ -49,9 +47,6 @@ export default function AdminSettings() {
     loadPhone();
   }, []);
 
-  // ------------------------------
-  // 2. UPDATE PASSWORD
-  // ------------------------------
   const handlePhoneUpdate = async (e) => {
     e.preventDefault();
 
@@ -84,21 +79,16 @@ export default function AdminSettings() {
     setNewPassword("");
   };
 
-  // ------------------------------
-  // 3. ADD / UPDATE TODO
-  // ------------------------------
   const handleTodoSubmit = async (e) => {
     e.preventDefault();
     if (!todoInput.trim()) return;
 
     if (editId) {
-      // Update existing task
       await dbs.updateDocument("admin_todos", String(editId), {
         text: todoInput
       });
       setEditId(null);
     } else {
-      // Add new task
       const id = Date.now().toString();
       await dbs.addDocument("admin_todos", id, {
         id,
@@ -111,17 +101,11 @@ export default function AdminSettings() {
     loadTodos();
   };
 
-  // ------------------------------
-  // 4. DELETE TODO
-  // ------------------------------
   const deleteTodo = async (id) => {
     await dbs.deleteDocument("admin_todos", String(id));
     loadTodos();
   };
 
-  // ------------------------------
-  // 5. TOGGLE TODO STATUS
-  // ------------------------------
   const toggleTodo = async (id) => {
     const item = todos.find((t) => t.id === id);
     await dbs.updateDocument("admin_todos", String(id), {
@@ -141,7 +125,6 @@ export default function AdminSettings() {
 
       <div className="settings-container">
 
-        {/* PASSWORD CARD */}
         <div className="stat-card">
           <h3>Admin Profile</h3>
 
@@ -171,7 +154,6 @@ export default function AdminSettings() {
             )}
           </form>
         </div>
-        {/* PHONE NUMBER CARD */}
         <div className="stat-card">
           <h3>Company Phone Number</h3>
 
@@ -196,8 +178,6 @@ export default function AdminSettings() {
             )}
           </form>
         </div>
-
-        {/* TODO CARD */}
         <div className="stat-card">
           <h3>Feedback To-Do List</h3>
 

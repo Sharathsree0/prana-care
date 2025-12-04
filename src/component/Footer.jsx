@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Footer.css";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
@@ -24,8 +25,6 @@ export default function Footer() {
       "Mother & Baby Care"
     ]
   });
-
-  // Load footer data from Firestore
   const loadFooter = async () => {
     const data = await dbs.readDocument("site_settings", "footer");
     if (data) setFooter(data);
@@ -41,7 +40,6 @@ export default function Footer() {
 
         <div className="footer-grid">
 
-          {/* Column 1 - Logo + Social */}
           <div className="footer-col">
             <h3 className="footer-logo">{footer.logo}</h3>
 
@@ -58,7 +56,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2 - Links */}
           <div className="footer-col">
             <h4 className="footer-title">Links</h4>
             <ul className="footer-links">
@@ -68,7 +65,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3 - Service List */}
           <div className="footer-col">
             <h4 className="footer-title">Our Care</h4>
             <ul className="footer-list">
@@ -78,7 +74,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4 - Contact */}
           <div className="footer-col">
             <h4 className="footer-title">Contact Us</h4>
 

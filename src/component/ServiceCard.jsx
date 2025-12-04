@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import "./ServiceCard.css";
 import dbs from "../firebase";
@@ -6,7 +8,6 @@ export default function ServiceCard({ id, title, price, desc, img, link }) {
   const [gallery, setGallery] = useState([img]);
   const [index, setIndex] = useState(0);
 
-  // Fetch gallery docs from Firestore collection: gallery_service_{id}
   const fetchGallery = async () => {
     try {
       const colName = `gallery_service_${id}`;
@@ -15,28 +16,19 @@ export default function ServiceCard({ id, title, price, desc, img, link }) {
       setGallery(urls.length > 0 ? urls : [img]);
       setIndex(0);
     } catch (err) {
-      // fallback to default image on error
       setGallery([img]);
       setIndex(0);
-      // console.error("Failed to load service gallery:", err);
     }
   };
 
-  // initial load + reload when id changes
   useEffect(() => {
     fetchGallery();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
-  // lightweight polling so admin changes in Firestore appear without full reload.
-  // Poll interval is 10s — small enough to be responsive, not aggressive.
   useEffect(() => {
     const poll = setInterval(fetchGallery, 10000);
     return () => clearInterval(poll);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // slideshow timer
   useEffect(() => {
     if (gallery.length <= 1) return;
     const timer = setInterval(() => setIndex((i) => (i + 1) % gallery.length), 3000);

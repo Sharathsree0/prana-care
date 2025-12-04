@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import dbs from "../firebase";  // your firebase helper file
+import dbs from "../firebase";  
 import "./Admin.css";
 
 export default function AdminAbout() {
@@ -11,7 +12,6 @@ export default function AdminAbout() {
 
   const [msg, setMsg] = useState("");
 
-  // Load data from Firestore when component loads
   useEffect(() => {
     const fetchContent = async () => {
       const data = await dbs.readDocument("site_content", "about_page");
@@ -19,7 +19,6 @@ export default function AdminAbout() {
       if (data) {
         setContent(data);
       } else {
-        // If no doc exists yet, create one
         const defaultData = {
           title: "Our Mission",
           lead: "To provide hospital-quality care in the comfort of your home.",

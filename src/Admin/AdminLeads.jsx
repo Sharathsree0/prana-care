@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Admin.css";
 import dbs from "../firebase";
@@ -5,7 +6,6 @@ import dbs from "../firebase";
 export default function AdminLeads() {
   const [leads, setLeads] = useState([]);
 
-  // -------- FETCH LEADS FROM FIRESTORE --------
   const loadLeads = async () => {
     const data = await dbs.readCollection("admin_leads");
     setLeads(data);
@@ -15,14 +15,12 @@ export default function AdminLeads() {
     loadLeads();
   }, []);
 
-  // -------- DELETE LEAD --------
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this lead?")) return;
     await dbs.deleteDocument("admin_leads", id);
     loadLeads();
   };
 
-  // -------- UPDATE STATUS --------
   const handleStatusChange = async (id, newStatus) => {
     await dbs.updateDocument("admin_leads", id, { status: newStatus });
     loadLeads();

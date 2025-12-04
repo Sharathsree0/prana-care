@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Admin.css";
-import dbs from "../firebase"; // your Firestore helper
+import dbs from "../firebase";
 
 export default function AdminHome() {
   const [content, setContent] = useState({
@@ -12,14 +13,12 @@ export default function AdminHome() {
 
   const [msg, setMsg] = useState("");
 
-  // ----------- LOAD HERO CONTENT -----------
   const loadHero = async () => {
     const data = await dbs.readDocument("site_content", "home_hero");
 
     if (data) {
       setContent(data);
     } else {
-      // Default data if Firestore is empty
       const defaultHero = {
         tagline: "Home Nursing • Elderly Care • Physiotherapy",
         title: "Compassionate Care,",
@@ -36,13 +35,11 @@ export default function AdminHome() {
     loadHero();
   }, []);
 
-  // ----------- INPUT HANDLER -----------
   const handleChange = (e) => {
     const { name, value } = e.target;
     setContent({ ...content, [name]: value });
   };
 
-  // ----------- SAVE TO FIRESTORE -----------
   const handleSave = async (e) => {
     e.preventDefault();
 

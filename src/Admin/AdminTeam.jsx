@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Admin.css";
 import dbs from "../firebase";
@@ -5,7 +6,6 @@ import dbs from "../firebase";
 export default function AdminTeam() {
   const [team, setTeam] = useState([]);
 
-  // -------- LOAD TEAM FROM FIRESTORE --------
   const loadTeam = async () => {
     const data = await dbs.readCollection("site_team");
     setTeam(data);
@@ -15,7 +15,6 @@ export default function AdminTeam() {
     loadTeam();
   }, []);
 
-  // -------- ADD MEMBER --------
   const handleAdd = async () => {
     const name = prompt("Enter Specialist Name:");
     if (!name) return;
@@ -34,7 +33,6 @@ export default function AdminTeam() {
     loadTeam();
   };
 
-  // -------- DELETE MEMBER --------
   const handleDelete = async (id) => {
     if (!window.confirm("Remove this member?")) return;
     await dbs.deleteDocument("site_team", id);

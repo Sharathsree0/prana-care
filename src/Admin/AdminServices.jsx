@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Admin.css";
 import dbs from "../firebase";
@@ -5,7 +6,6 @@ import dbs from "../firebase";
 export default function AdminServices() {
   const [services, setServices] = useState([]);
 
-  // ----------- FETCH SERVICES FROM FIRESTORE -----------
   const loadServices = async () => {
     const data = await dbs.readCollection("services");
     setServices(data);
@@ -15,7 +15,6 @@ export default function AdminServices() {
     loadServices();
   }, []);
 
-  // ----------- ADD SERVICE -----------
   const handleAdd = async () => {
     const title = prompt("Enter Service Name:");
     if (!title) return;
@@ -36,14 +35,12 @@ export default function AdminServices() {
     loadServices();
   };
 
-  // ----------- DELETE SERVICE -----------
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this service?")) return;
     await dbs.deleteDocument("services", id);
     loadServices();
   };
 
-  // ----------- ENABLE/DISABLE SERVICE -----------
   const toggleStatus = async (id) => {
     const s = services.find((item) => item.id === id);
 

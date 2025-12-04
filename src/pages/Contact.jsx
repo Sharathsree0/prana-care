@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import { FaPhoneAlt, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
 import "./Contact.css";
@@ -7,11 +8,9 @@ export default function Contact() {
   const [result, setResult] = useState("");
   const [myPhoneNumber, setMyPhoneNumber] = useState("919092630929");
 
-  // Load phone number from Firestore
   const fetchPhoneNumber = async () => {
     const res = await dbs.readDocument("admin_settings", "phone");
     if (res?.phone) {
-      // Remove spaces and + symbols for WhatsApp compatibility
       const cleaned = res.phone.replace(/[\s+]/g, "");
       setMyPhoneNumber(cleaned);
     }
@@ -33,7 +32,6 @@ export default function Contact() {
 
     const id = Date.now().toString();
 
-    // ---- SAVE LEAD TO FIRESTORE ----
     const newLead = {
       id,
       name,
@@ -46,7 +44,6 @@ export default function Contact() {
 
     await dbs.addDocument("admin_leads", id, newLead);
 
-    // ---- SEND TO WHATSAPP USING FIRESTORE NUMBER ----
     const whatsappUrl =
       `https://wa.me/${myPhoneNumber}?text=` +
       `*New Inquiry from Website*%0a` +
@@ -72,7 +69,6 @@ export default function Contact() {
 
         <div className="contact-grid">
           
-          {/* LEFT INFO PANEL */}
           <div className="contact-info-card">
             <h3>Contact Information</h3>
 
@@ -88,7 +84,6 @@ export default function Contact() {
               <div className="contact-icon"><FaPhoneAlt size={20} /></div>
               <div>
                 <h4>Phone Number</h4>
-                {/* DYNAMIC PHONE NUMBER */}
                 <p>{myPhoneNumber}</p>
               </div>
             </div>
@@ -102,7 +97,6 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* RIGHT CONTACT FORM */}
           <div className="contact-form-card">
             <form onSubmit={onSubmit} className="contact-form">
 

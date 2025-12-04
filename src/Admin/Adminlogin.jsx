@@ -1,21 +1,20 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminAuth.css";
-import dbs from "../firebase"; // your Firestore helper
+import dbs from "../firebase"; 
 
 export default function AdminLogin() {
   const [message, setMessage] = useState("");
   const [authData, setAuthData] = useState(null);
   const navigate = useNavigate();
 
-  // Load admin credentials from Firestore
   const loadAuthData = async () => {
     const data = await dbs.readDocument("admin_settings", "auth");
     const user = JSON.parse(localStorage.getItem("adminAuth")||[])
     if(user){
-      // navigate("/admin/dashboard");
+      navigate("/admin");
     }
-    // If first time, auto-create default login
     if (!data) {
       await dbs.addDocument("admin_settings", "auth", {
         email: "admin@gmail.com",

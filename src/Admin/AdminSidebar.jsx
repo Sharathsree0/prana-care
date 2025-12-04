@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import dbs from "../firebase";
@@ -11,7 +12,6 @@ export default function AdminSidebar() {
     sub: "Admin"
   });
 
-  // Load dynamic sidebar branding
   const loadBranding = async () => {
     const data = await dbs.readDocument("site_settings", "branding");
     if (data) {
@@ -35,7 +35,6 @@ export default function AdminSidebar() {
   return (
     <aside className="admin-sidebar">
       
-      {/* BRANDING */}
       <div className="admin-brand">
         <div className="brand-symbol">{branding.symbol}</div>
         <div>
@@ -44,7 +43,6 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      {/* MAIN NAVIGATION */}
       <nav className="admin-nav">
         <NavLink to="/admin" end className="nav-item">Dashboard</NavLink>
         <NavLink to="/admin/leads" className="nav-item">Leads</NavLink>
@@ -56,7 +54,6 @@ export default function AdminSidebar() {
         <NavLink to="/admin/settings" className="nav-item">Settings</NavLink>
       </nav>
 
-      {/* FOOTER */}
       <div className="admin-footer">
         <button className="logout-btn" onClick={handleLogout}>
           Logout

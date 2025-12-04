@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import ServiceCard from "../component/ServiceCard";
 import "./Services.css";
@@ -6,7 +7,6 @@ import dbs from "../firebase";
 export default function Services() {
   const [servicesData, setServicesData] = useState([]);
 
-  // ---- LOAD SERVICES FROM FIRESTORE ----
   const loadServices = async () => {
     const data = await dbs.readCollection("services");
     setServicesData(data);
@@ -16,10 +16,8 @@ export default function Services() {
     loadServices();
   }, []);
 
-  // Only active services
   const activeServices = servicesData.filter((s) => s.active !== false);
 
-  // Default descriptions if not provided
   const getDescription = (title) => {
     if (title.includes("Nursing"))
       return "Professional nursing care for post-surgery recovery, wound dressing, and injections.";
@@ -33,7 +31,6 @@ export default function Services() {
     return "Contact us for more details about our " + title + " service.";
   };
 
-  // Default fallback images based on id
   const getImage = (id) => {
     if (id === "1" || id === 1)
       return "https://images.unsplash.com/photo-1576765611791-374775097460?auto=format&fit=crop&q=80&w=600";

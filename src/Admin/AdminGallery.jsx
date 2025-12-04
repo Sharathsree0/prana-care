@@ -1,12 +1,12 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Admin.css";
-import dbs from "../firebase"; // fire helper
+import dbs from "../firebase"; 
 
 export default function AdminGallery() {
   const [section, setSection] = useState("gallery_hero");
   const [images, setImages] = useState([]);
 
-  // Load gallery images from Firestore when section changes
   const loadGallery = async (targetSection) => {
     const data = await dbs.readCollection(targetSection);
     const formatted = data.map((item) => ({ id: item.id, url: item.url }));
@@ -17,18 +17,15 @@ export default function AdminGallery() {
     loadGallery(section);
   }, [section]);
 
-  // Add new image
   const handleAdd = async () => {
     const url = prompt(`Paste image URL for ${section.replace("gallery_", "").toUpperCase()}:`);
     if (!url) return;
 
-    const docId = crypto.randomUUID(); // unique id
-
+    const docId = crypto.randomUUID();
     await dbs.addDocument(section, docId, { url });
     loadGallery(section);
   };
 
-  // Delete image
   const handleDelete = async (id) => {
     if (!window.confirm("Remove this image?")) return;
 
@@ -41,7 +38,6 @@ export default function AdminGallery() {
       <div className="admin-header-row">
         <h2>Website Gallery Manager</h2>
 
-        {/* Select section */}
         <select
           className="admin-btn"
           style={{ backgroundColor: "white", color: "#333", border: "1px solid #ccc" }}
