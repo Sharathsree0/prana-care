@@ -1,4 +1,3 @@
-// AdminSidebar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
 
 export default function AdminSidebar() {
@@ -6,7 +5,6 @@ export default function AdminSidebar() {
 
   const handleLogout = () => {
     localStorage.removeItem("adminAuth");
-    // optional: clear other admin data
     navigate("/admin/login");
   };
 

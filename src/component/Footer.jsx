@@ -8,9 +8,7 @@ export default function Footer() {
 
         <div className="footer-grid">
 
-          {/* brand */}
           <div className="footer-col">
-            {/* UPDATED LOGO */}
             <h3 className="footer-logo">PranaHome<span>Care</span></h3>
 
             <p className="footer-desc">
@@ -23,7 +21,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* links */}
           <div className="footer-col">
             <h4 className="footer-title">Links</h4>
             <ul className="footer-links">
@@ -34,7 +31,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Services list */}
           <div className="footer-col">
             <h4 className="footer-title">Our Care</h4>
             <ul className="footer-list">
@@ -45,7 +41,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* contact */}
           <div className="footer-col">
             <h4 className="footer-title">Contact Us</h4>
 
@@ -54,7 +49,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* UPDATED COPYRIGHT */}
         <div className="footer-bottom">
           © {new Date().getFullYear()} PranaCare. All rights reserved.
         </div>

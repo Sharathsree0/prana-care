@@ -2,10 +2,8 @@ import { useState } from "react";
 import "./Admin.css";
 
 export default function AdminServices() {
-  // Lazy Init
   const [services, setServices] = useState(() => {
     const storedServices = localStorage.getItem("adminServices");
-    // Default data if empty
     return storedServices ? JSON.parse(storedServices) : [
       { id: 1, title: "Home Nursing", price: "₹800/day", active: true },
       { id: 2, title: "Elderly Care", price: "₹15000/mo", active: true },
@@ -17,7 +15,6 @@ export default function AdminServices() {
     setServices(newData);
     localStorage.setItem("adminServices", JSON.stringify(newData));
     
-    // 🔥 TRIGGER LIVE UPDATE
     window.dispatchEvent(new Event("storage"));
   };
 

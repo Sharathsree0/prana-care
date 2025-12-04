@@ -2,7 +2,6 @@ import { useState } from "react";
 import "./Admin.css";
 
 export default function AdminAbout() {
-  // 1. Lazy Load existing content or use Default
   const [content, setContent] = useState(() => {
     const stored = localStorage.getItem("about_content");
     return stored ? JSON.parse(stored) : {
@@ -21,10 +20,8 @@ export default function AdminAbout() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    // 2. Save to Storage
     localStorage.setItem("about_content", JSON.stringify(content));
     
-    // 3. Signal the About Page to update
     window.dispatchEvent(new Event("storage"));
     
     setMsg("Content updated successfully! ✅");

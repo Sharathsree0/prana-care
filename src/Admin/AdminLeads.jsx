@@ -6,18 +6,16 @@ export default function AdminLeads() {
   const loadLeads = () => JSON.parse(localStorage.getItem("adminLeads") || "[]");
   const [leads, setLeads] = useState(loadLeads);
 
-  // 1. LIVE LISTENER (Receive new leads instantly)
   useEffect(() => {
     const handleStorage = () => setLeads(loadLeads());
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  // 2. SAVE CHANGES (When you delete or change status)
   const saveLeads = (updatedLeads) => {
     setLeads(updatedLeads);
     localStorage.setItem("adminLeads", JSON.stringify(updatedLeads));
-    window.dispatchEvent(new Event("storage")); // Notify Dashboard
+    window.dispatchEvent(new Event("storage")); 
   };
 
   const handleDelete = (id) => {

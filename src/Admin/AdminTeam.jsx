@@ -2,7 +2,6 @@ import { useState } from "react";
 import "./Admin.css";
 
 export default function AdminTeam() {
-  // 1. Load Team Data from LocalStorage
   const [team, setTeam] = useState(() => {
     const stored = localStorage.getItem("adminTeam");
     return stored ? JSON.parse(stored) : [
@@ -14,7 +13,6 @@ export default function AdminTeam() {
   const updateTeam = (newTeam) => {
     setTeam(newTeam);
     localStorage.setItem("adminTeam", JSON.stringify(newTeam));
-    // Trigger update for About page
     window.dispatchEvent(new Event("storage"));
   };
 
@@ -24,7 +22,6 @@ export default function AdminTeam() {
     const role = prompt("Enter Role (e.g. Senior Nurse):");
     const img = prompt("Paste Image URL:");
     
-    // Default image if empty
     const finalImg = img || "https://dummyimage.com/400x400/ccc/000?text=User";
 
     const newMember = { id: Date.now(), name, role, img: finalImg };

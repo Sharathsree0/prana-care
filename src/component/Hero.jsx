@@ -2,39 +2,31 @@ import { useState, useEffect } from "react";
 import "./Hero.css";
 
 export default function Hero() {
-  // 1. Helper function to load data safely
   const loadGallery = () => {
     const stored = localStorage.getItem("gallery_hero");
     const parsed = stored ? JSON.parse(stored) : [];
-    // Return saved images OR default placeholder if empty
     return parsed.length > 0 ? parsed : ["https://dummyimage.com/600x400/343a40/6c757d"];
   };
 
   const [gallery, setGallery] = useState(loadGallery);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 2. AUTO-UPDATE LISTENER (The Magic Part ✨)
   useEffect(() => {
-    // This function runs whenever LocalStorage changes in another tab
     const handleStorageChange = () => {
       setGallery(loadGallery());
-      setCurrentIndex(0); // Reset slideshow to start
+      setCurrentIndex(0); 
     };
 
-    // Listen for the 'storage' event
     window.addEventListener("storage", handleStorageChange);
 
-    // Cleanup when component unmounts
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  // 3. Slideshow Timer
   useEffect(() => {
-    if (gallery.length <= 1) return; // Don't slide if only 1 image
-
+    if (gallery.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % gallery.length);
-    }, 3000); // Change every 3 seconds
+    }, 3000); 
 
     return () => clearInterval(interval);
   }, [gallery.length]);
@@ -43,7 +35,6 @@ export default function Hero() {
     <header id="home" className="hero">
       <div className="hero-container">
         
-        {/* LEFT SIDE TEXT */}
         <div className="hero-left">
           <p className="hero-tagline">Home Nursing • Elderly Care • Physiotherapy</p>
           <h1 className="hero-title">Compassionate Care, <br /><span>Right at Your Home</span></h1>
@@ -61,11 +52,10 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* RIGHT SIDE - DYNAMIC SLIDESHOW */}
         <div className="hero-right">
           <div className="hero-image-wrapper">
             <img
-              key={currentIndex} // Key change triggers animation
+              key={currentIndex}
               src={gallery[currentIndex]}
               alt="Nursing Care Gallery"
               className="hero-image fade-in" 

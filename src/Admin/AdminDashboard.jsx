@@ -4,7 +4,6 @@ import "./Admin.css";
 
 export default function AdminDashboard() {
   
-  // Helper to calculate stats
   const getStats = () => {
     const leads = JSON.parse(localStorage.getItem("adminLeads") || "[]");
     const services = JSON.parse(localStorage.getItem("adminServices") || "[]");
@@ -16,13 +15,12 @@ export default function AdminDashboard() {
         { id: 3, label: "Services", value: services.length },
         { id: 4, label: "Satisfaction", value: "4.9★" },
       ],
-      recentLeads: leads.slice(0, 3) // First 3 (newest are added to top)
+      recentLeads: leads.slice(0, 3)
     };
   };
 
   const [data, setData] = useState(getStats);
 
-  // 🔥 LIVE LISTENER
   useEffect(() => {
     const handleStorage = () => setData(getStats());
     window.addEventListener("storage", handleStorage);

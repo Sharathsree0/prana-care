@@ -1,7 +1,7 @@
 // AdminTopbar.jsx
 
 export default function AdminTopbar() {
-  const adminEmail = "admin@gmail.com"; // show static; replace with real profile later
+  const adminEmail = "admin@gmail.com"; 
   return (
     <header className="admin-topbar">
       <div className="topbar-left">

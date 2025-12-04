@@ -16,9 +16,6 @@ import AdminGallery from "./Admin/AdminGallery";
 import AdminTeam from "./Admin/AdminTeam";
 import AdminAbout from "./Admin/AdminAbout";
 
-// NOTE: We commented these out because the files don't exist yet!
-// import AdminLeads from "./Admin/AdminLeads"; 
-// import AdminServices from "./Admin/AdminServices"; 
 
 export default function App() {
   const PublicSite = (
@@ -36,13 +33,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* 1. Public Website Route */}
         <Route path="/" element={PublicSite} />
 
-        {/* 2. Admin Login Route */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
-        {/* 3. Protected Admin Dashboard Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="leads" element={<AdminLeads />} />       
@@ -53,7 +47,6 @@ export default function App() {
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 
-        {/* 4. Fallbacks */}
         <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

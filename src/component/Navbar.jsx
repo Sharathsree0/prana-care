@@ -8,17 +8,14 @@ export default function Navbar() {
     <nav className="nav">
       <div className="nav-container">
         
-        {/* Logo */}
         <a href="#home" className="nav-logo">
           PranaHome<span>Nursing</span>
         </a>
 
-        {/* Mobile toggle */}
         <button className="nav-toggle" onClick={() => setIsOpen(!isOpen)}>
           ☰
         </button>
 
-        {/* Links */}
         <ul className={`nav-links ${isOpen ? "show" : ""}`}>
           <li><a href="#home">Home</a></li>
           <li><a href="#about">About Us</a></li>

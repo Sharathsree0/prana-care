@@ -1,11 +1,10 @@
-// src/Admin/AdminGallery.jsx
 import { useState } from "react";
 import "./Admin.css";
 
 export default function AdminGallery() {
   const [section, setSection] = useState("gallery_hero");
 
-  // FIX 1: Load "Hero" images immediately on startup (No useEffect needed)
+ 
   const [images, setImages] = useState(() => {
     const stored = localStorage.getItem("gallery_hero");
     return stored ? JSON.parse(stored) : [];
@@ -14,11 +13,11 @@ export default function AdminGallery() {
   const updateGallery = (newImages) => {
     setImages(newImages);
     localStorage.setItem(section, JSON.stringify(newImages));
-    // Force Home/About pages to update instantly
+   
     window.dispatchEvent(new Event("storage"));
   };
 
-  // FIX 2: Load new data here when dropdown changes (Instead of useEffect)
+ 
   const handleSectionChange = (e) => {
     const newSection = e.target.value;
     setSection(newSection);
@@ -45,12 +44,12 @@ export default function AdminGallery() {
       <div className="admin-header-row">
         <h2>Website Gallery Manager</h2>
         
-        {/* DROPDOWN */}
+        
         <select 
           className="admin-btn" 
           style={{backgroundColor: "white", color: "#333", border: "1px solid #ccc"}}
           value={section}
-          onChange={handleSectionChange} // <--- Calls our manual handler
+          onChange={handleSectionChange} 
         >
           <option value="gallery_hero">Hero (Home Banner)</option>
           <option value="gallery_about">About Us Image</option>

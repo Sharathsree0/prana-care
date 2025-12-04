@@ -20,7 +20,6 @@ export default function FloatingButtons() {
   return (
     <div className="floating-wrapper">
 
-      {/* WhatsApp */}
       <a
         href="https://wa.me/9092630929?text=Hello%20WeCare,%20I%20need%20more%20info."
         target="_blank"
@@ -33,7 +32,6 @@ export default function FloatingButtons() {
         />
       </a>
 
-      {/* back to top */}
       {showTopBtn && (
         <button className="floating-btn top-btn" onClick={scrollToTop}>
           ↑
