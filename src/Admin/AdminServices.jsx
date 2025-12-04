@@ -22,6 +22,8 @@ export default function AdminServices() {
     const price = prompt("Enter Price (e.g. ₹500/day):");
     if (!price) return;
 
+    const imgUrl = prompt("Enter Image URL (optional):");
+
     const id = Date.now().toString();
 
     const newService = {
@@ -32,6 +34,12 @@ export default function AdminServices() {
     };
 
     await dbs.addDocument("services", id, newService);
+
+    if (imgUrl) {
+      const galleryId = Date.now().toString();
+      await dbs.addDocument(`gallery_service_${id}`, galleryId, { url: imgUrl });
+    }
+
     loadServices();
   };
 

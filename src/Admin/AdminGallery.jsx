@@ -6,6 +6,15 @@ import dbs from "../firebase";
 export default function AdminGallery() {
   const [section, setSection] = useState("gallery_hero");
   const [images, setImages] = useState([]);
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      const data = await dbs.readCollection("services");
+      setServices(data || []);
+    };
+    fetchServices();
+  }, []);
 
   const loadGallery = async (targetSection) => {
     const data = await dbs.readCollection(targetSection);
@@ -18,7 +27,14 @@ export default function AdminGallery() {
   }, [section]);
 
   const handleAdd = async () => {
-    const url = prompt(`Paste image URL for ${section.replace("gallery_", "").toUpperCase()}:`);
+    let nameForPrompt = section;
+    if (section.startsWith("gallery_service_")) {
+        nameForPrompt = "Service Gallery";
+    } else {
+        nameForPrompt = section.replace("gallery_", "").toUpperCase();
+    }
+
+    const url = prompt(`Paste image URL for ${nameForPrompt}:`);
     if (!url) return;
 
     const docId = crypto.randomUUID();
@@ -40,15 +56,18 @@ export default function AdminGallery() {
 
         <select
           className="admin-btn"
-          style={{ backgroundColor: "white", color: "#333", border: "1px solid #ccc" }}
+          style={{ backgroundColor: "white", color: "#333", border: "1px solid #ccc", maxWidth: "300px" }}
           value={section}
           onChange={(e) => setSection(e.target.value)}
         >
           <option value="gallery_hero">Hero (Home Banner)</option>
           <option value="gallery_about">About Us Image</option>
-          <option value="gallery_service_1">Service: Home Nursing</option>
-          <option value="gallery_service_2">Service: Elderly Care</option>
-          <option value="gallery_service_3">Service: Physiotherapy</option>
+          
+           {services.map((s) => (
+            <option key={s.id} value={`gallery_service_${s.id}`}>
+              Service: {s.title}
+            </option>
+          ))}
         </select>
 
         <button className="admin-btn" onClick={handleAdd}>
@@ -58,7 +77,7 @@ export default function AdminGallery() {
 
       <div className="stat-grid">
         {images.length === 0 && (
-          <p style={{ color: "#888" }}>No images in this section yet.</p>
+          <p style={{ color: "#888", width: "100%" }}>No images in this section yet.</p>
         )}
 
         {images.map((img) => (
