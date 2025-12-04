@@ -19,29 +19,28 @@ export default function AdminSidebar() {
       </div>
 
       <nav className="admin-nav">
-        <NavLink to="/admin" end className="nav-item">
-          Dashboard
+        <NavLink to="/admin" end className="nav-item"> Dashboard
         </NavLink>
 
-        <NavLink to="/admin/leads" className="nav-item">
-          Leads
+        <NavLink to="/admin/leads" className="nav-item"> Leads
         </NavLink>
 
         <NavLink to="/admin/team" className="nav-item">Team
         </NavLink>
 
-        <NavLink to="/admin/services" className="nav-item">
-          Services
+        <NavLink to="/admin/services" className="nav-item"> Services
         </NavLink>
 
         <NavLink to="/admin/gallery" className="nav-item">Gallery
         </NavLink>
 
+        <NavLink to="/admin/home" className="nav-item">Home Info
+        </NavLink>
+
         <NavLink to="/admin/about" className="nav-item">About Info
         </NavLink>
 
-        <NavLink to="/admin/settings" className="nav-item">
-          Settings
+        <NavLink to="/admin/settings" className="nav-item">Settings
         </NavLink>
       </nav>
 

@@ -15,6 +15,7 @@ import AdminSettings from "./Admin/AdminSettings";
 import AdminGallery from "./Admin/AdminGallery";
 import AdminTeam from "./Admin/AdminTeam";
 import AdminAbout from "./Admin/AdminAbout";
+import AdminHome from "./Admin/AdminHome";
 
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="leads" element={<AdminLeads />} />       
           <Route path="team" element={<AdminTeam />} />
           <Route path="about" element={<AdminAbout />} />
+          <Route path="home" element={<AdminHome />} />
           <Route path="services" element={<AdminServices />} /> 
           <Route path="gallery" element={<AdminGallery />} />
           <Route path="settings" element={<AdminSettings />} />
