@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaPhoneAlt, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
 import "./Contact.css";
 
 export default function Contact() {
@@ -14,26 +15,21 @@ export default function Contact() {
     const service = formData.get("service");
     const message = formData.get("message");
 
-    // --- 1. SAVE TO ADMIN DASHBOARD (LocalStorage) ---
     const newLead = {
       id: Date.now(),
       name: name,
       phone: phone,
       service: service,
-      message: message, // Saving the message too
+      message: message, 
       status: "New",
       date: new Date().toISOString().split('T')[0]
     };
 
-    // Get existing leads, add new one, save back
     const existingLeads = JSON.parse(localStorage.getItem("adminLeads") || "[]");
     localStorage.setItem("adminLeads", JSON.stringify([newLead, ...existingLeads]));
     
-    // Notify Admin Dashboard to update instantly
     window.dispatchEvent(new Event("storage"));
 
-    // --- 2. SEND TO WHATSAPP ---
-    // REPLACE with your real phone number (Format: CountryCode + Number, e.g., 919092630929)
     const myPhoneNumber = "919092630929"; 
     
     const whatsappUrl = `https://wa.me/${myPhoneNumber}?text=` +
@@ -43,9 +39,7 @@ export default function Contact() {
       `Service: ${service}%0a` +
       `Message: ${message}`;
 
-    // Open WhatsApp in a new tab
     window.open(whatsappUrl, "_blank");
-
     setResult("Saved! Opening WhatsApp... ✅");
     event.target.reset();
   };
@@ -60,24 +54,31 @@ export default function Contact() {
         </div>
 
         <div className="contact-grid">
-          {/* LEFT: INFO */}
           <div className="contact-info-card">
             <h3>Contact Information</h3>
+            
             <div className="contact-info-item">
-              <div className="contact-icon"><span>📍</span></div>
+              <div className="contact-icon">
+                <FaMapMarkerAlt size={20} />
+              </div>
               <div><h4>Our Location</h4><p>#123, Green Valley, Bangalore</p></div>
             </div>
+
             <div className="contact-info-item">
-              <div className="contact-icon"><span>📞</span></div>
+              <div className="contact-icon">
+                <FaPhoneAlt size={20} />
+              </div>
               <div><h4>Phone Number</h4><p>+91 90926 30929</p></div>
             </div>
+
             <div className="contact-info-item">
-              <div className="contact-icon"><span>✉️</span></div>
+              <div className="contact-icon">
+                <FaEnvelope size={20} />
+              </div>
               <div><h4>Email Address</h4><p>help@pranacare.com</p></div>
             </div>
           </div>
 
-          {/* RIGHT: FORM */}
           <div className="contact-form-card">
             <form onSubmit={onSubmit} className="contact-form">
               <div className="form-row">

@@ -1,4 +1,5 @@
 import "./Footer.css";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -16,8 +17,13 @@ export default function Footer() {
             </p>
 
             <div className="footer-social">
-              <a href="">FB</a>
-              <a href="">IG</a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                <FaFacebook size={24} />
+              </a>
+
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                <FaInstagram size={24} />
+              </a>
             </div>
           </div>
 

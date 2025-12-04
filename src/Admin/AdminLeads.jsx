@@ -32,7 +32,7 @@ export default function AdminLeads() {
     <section>
       <div className="admin-header-row">
         <h2>Leads Management</h2>
-        <button className="admin-btn" onClick={() => alert("Export feature coming soon!")}>Export CSV</button>
+
       </div>
 
       <div className="admin-table-container">

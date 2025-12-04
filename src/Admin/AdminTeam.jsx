@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./Admin.css";
-
 export default function AdminTeam() {
   const [team, setTeam] = useState(() => {
     const stored = localStorage.getItem("adminTeam");
