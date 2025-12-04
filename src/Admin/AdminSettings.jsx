@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react"; // 1. Import useEffect
+import { useState, useEffect } from "react"; 
 import "./Admin.css";
 
 export default function AdminSettings() {
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  // --- 2. LOAD SHORTCUT: Check storage first, if empty, use default list ---
   const [todos, setTodos] = useState(() => {
     const saved = localStorage.getItem("adminTodos");
     return saved ? JSON.parse(saved) : [{ id: 1, text: "Review user feedback", completed: false }];
@@ -14,12 +13,10 @@ export default function AdminSettings() {
   const [todoInput, setTodoInput] = useState("");
   const [editId, setEditId] = useState(null);
 
-  // --- 3. AUTO-SAVE SHORTCUT: Whenever 'todos' changes, save it ---
   useEffect(() => {
     localStorage.setItem("adminTodos", JSON.stringify(todos));
   }, [todos]);
 
-  // --- EXISTING HANDLERS (Unchanged) ---
   const handlePasswordUpdate = (e) => {
     e.preventDefault();
     if (newPassword.length < 4) {
