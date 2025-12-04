@@ -1,47 +1,49 @@
 import { useState, useEffect } from "react";
 import ServiceCard from "../component/ServiceCard";
 import "./Services.css";
+import dbs from "../firebase";
 
 export default function Services() {
-  
-  // 1. Load Dynamic Services from Admin
-  const loadServices = () => {
-    const stored = localStorage.getItem("adminServices");
-    // Fallback default data if nothing in storage
-    return stored ? JSON.parse(stored) : [
-      { id: 1, title: "Home Nursing", price: "₹800/day", active: true },
-      { id: 2, title: "Elderly Care", price: "₹15000/mo", active: true },
-      { id: 3, title: "Physiotherapy", price: "₹600/session", active: true },
-    ];
+  const [servicesData, setServicesData] = useState([]);
+
+  // ---- LOAD SERVICES FROM FIRESTORE ----
+  const loadServices = async () => {
+    const data = await dbs.readCollection("services");
+    setServicesData(data);
   };
 
-  const [servicesData, setServicesData] = useState(loadServices);
-
-  // 2. LIVE LISTENER
   useEffect(() => {
-    const handleStorage = () => {
-      setServicesData(loadServices());
-    };
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
+    loadServices();
   }, []);
 
-  // Filter only 'active' services
-  const activeServices = servicesData.filter(s => s.active !== false);
+  // Only active services
+  const activeServices = servicesData.filter((s) => s.active !== false);
 
-  // Helper to give descriptions to new services (since Admin only asks for Title/Price)
+  // Default descriptions if not provided
   const getDescription = (title) => {
-    if (title.includes("Nursing")) return "Professional nursing care for post-surgery recovery, wound dressing, and injections.";
-    if (title.includes("Elderly")) return "Compassionate companionship and daily living assistance for senior citizens.";
-    if (title.includes("Physio")) return "Expert rehab exercises to regain mobility and strength after injury.";
+    if (title.includes("Nursing"))
+      return "Professional nursing care for post-surgery recovery, wound dressing, and injections.";
+
+    if (title.includes("Elderly"))
+      return "Compassionate companionship and daily living assistance for senior citizens.";
+
+    if (title.includes("Physio"))
+      return "Expert rehab exercises to regain mobility and strength after injury.";
+
     return "Contact us for more details about our " + title + " service.";
   };
 
-  // Helper for default images
+  // Default fallback images based on id
   const getImage = (id) => {
-    if(id === 1) return "https://images.unsplash.com/photo-1576765611791-374775097460?auto=format&fit=crop&q=80&w=600";
-    if(id === 2) return "https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?auto=format&fit=crop&q=80&w=600";
-    if(id === 3) return "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=600";
+    if (id === "1" || id === 1)
+      return "https://images.unsplash.com/photo-1576765611791-374775097460?auto=format&fit=crop&q=80&w=600";
+
+    if (id === "2" || id === 2)
+      return "https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?auto=format&fit=crop&q=80&w=600";
+
+    if (id === "3" || id === 3)
+      return "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=600";
+
     return "https://dummyimage.com/600x400/10b981/ffffff?text=" + id;
   };
 
@@ -60,7 +62,7 @@ export default function Services() {
               key={service.id}
               id={service.id}
               title={service.title}
-              price={service.price} // Pass the rate!
+              price={service.price}
               desc={service.desc || getDescription(service.title)}
               img={getImage(service.id)}
               link="#contact"

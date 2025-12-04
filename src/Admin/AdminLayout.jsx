@@ -1,18 +1,36 @@
-import { Outlet, Navigate, useNavigate } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
 import AdminTopbar from "./AdminTopbar";
-import "./Admin.css"
-export default function AdminLayout() {
-  const isAuth = localStorage.getItem("adminAuth") === "true";
-  const navigate = useNavigate();
+import { useEffect, useState } from "react";
+import "./Admin.css";
 
-  if (!isAuth) {
-    return <Navigate to="/admin/login" replace />;
-  }
+export default function AdminLayout() {
+  const [isAuth, setIsAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const checkAuth = async () => {
+    const session = localStorage.getItem("adminAuth");
+
+    if (session === "true") {
+      setIsAuth(true);
+    } else {
+      setIsAuth(false);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  if (loading) return null;
+
+  if (!isAuth) return <Navigate to="/admin/login" replace />;
 
   return (
     <div className="admin-shell">
-      <AdminSidebar onClose={() => navigate("/admin/login")} />
+      <AdminSidebar />
       <div className="admin-main">
         <AdminTopbar />
         <main className="admin-content">

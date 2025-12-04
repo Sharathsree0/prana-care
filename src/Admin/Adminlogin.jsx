@@ -1,23 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminAuth.css";
+import dbs from "../firebase"; // your Firestore helper
 
 export default function AdminLogin() {
   const [message, setMessage] = useState("");
+  const [authData, setAuthData] = useState(null);
   const navigate = useNavigate();
+
+  // Load admin credentials from Firestore
+  const loadAuthData = async () => {
+    const data = await dbs.readDocument("admin_settings", "auth");
+    const user = JSON.parse(localStorage.getItem("adminAuth")||[])
+    if(user){
+      // navigate("/admin/dashboard");
+    }
+    // If first time, auto-create default login
+    if (!data) {
+      await dbs.addDocument("admin_settings", "auth", {
+        email: "admin@gmail.com",
+        password: "admin123",
+      });
+      setAuthData({ email: "admin@gmail.com", password: "admin123" });
+    } else {
+      setAuthData(data);
+    }
+  };
+
+  useEffect(() => {
+    loadAuthData();
+  }, []);
 
   const handleLogin = (e) => {
     e.preventDefault();
 
     const email = e.target.email.value;
     const pass = e.target.password.value;
+    if (!authData) {
+      setMessage("Loading admin authentication... ⏳");
+      return;
+    }
 
-    const storedPass = localStorage.getItem("adminPass") || "admin123";
-
-    if (email === "admin@gmail.com" && pass === storedPass) {
+    if (email === authData.email && pass === authData.password) {
       localStorage.setItem("adminAuth", "true");
-      
-      navigate("/admin", { replace: true });
+      navigate("/admin");
     } else {
       setMessage("Invalid login credentials ❌");
     }

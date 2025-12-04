@@ -1,57 +1,94 @@
+import { useState, useEffect } from "react";
 import "./Footer.css";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
+import dbs from "../firebase";
 
 export default function Footer() {
+  const [footer, setFooter] = useState({
+    logo: "PranaHomeCare",
+    desc: "Professional home nursing and elderly care services delivered with compassion.",
+    facebook: "https://facebook.com",
+    instagram: "https://instagram.com",
+    phone: "+91 9092630929",
+    email: "help@pranacare.com",
+    links: [
+      { label: "Home", link: "#home" },
+      { label: "About Us", link: "#about" },
+      { label: "Services", link: "#services" },
+      { label: "Contact", link: "#contact" }
+    ],
+    services: [
+      "Elderly Care",
+      "Post-Surgery Nursing",
+      "Physiotherapy",
+      "Mother & Baby Care"
+    ]
+  });
+
+  // Load footer data from Firestore
+  const loadFooter = async () => {
+    const data = await dbs.readDocument("site_settings", "footer");
+    if (data) setFooter(data);
+  };
+
+  useEffect(() => {
+    loadFooter();
+  }, []);
+
   return (
     <footer id="footer" className="footer">
-
       <div className="footer-container">
 
         <div className="footer-grid">
 
+          {/* Column 1 - Logo + Social */}
           <div className="footer-col">
-            <h3 className="footer-logo">PranaHome<span>Care</span></h3>
+            <h3 className="footer-logo">{footer.logo}</h3>
 
-            <p className="footer-desc">
-              Professional home nursing and elderly care services delivered with compassion.
-            </p>
+            <p className="footer-desc">{footer.desc}</p>
 
             <div className="footer-social">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              <a href={footer.facebook} target="_blank" rel="noopener noreferrer">
                 <FaFacebook size={24} />
               </a>
 
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              <a href={footer.instagram} target="_blank" rel="noopener noreferrer">
                 <FaInstagram size={24} />
               </a>
             </div>
           </div>
 
+          {/* Column 2 - Links */}
           <div className="footer-col">
             <h4 className="footer-title">Links</h4>
             <ul className="footer-links">
-              <li><a href="#home">Home</a></li>
-              <li><a href="#about">About Us</a></li>
-              <li><a href="#services">Services</a></li>
-              <li><a href="#contact">Contact</a></li>
+              {footer.links.map((item, idx) => (
+                <li key={idx}><a href={item.link}>{item.label}</a></li>
+              ))}
             </ul>
           </div>
 
+          {/* Column 3 - Service List */}
           <div className="footer-col">
             <h4 className="footer-title">Our Care</h4>
             <ul className="footer-list">
-              <li>Elderly Care</li>
-              <li>Post-Surgery Nursing</li>
-              <li>Physiotherapy</li>
-              <li>Mother & Baby Care</li>
+              {footer.services.map((srv, idx) => (
+                <li key={idx}>{srv}</li>
+              ))}
             </ul>
           </div>
 
+          {/* Column 4 - Contact */}
           <div className="footer-col">
             <h4 className="footer-title">Contact Us</h4>
 
-            <p className="footer-text"><strong>Phone:</strong> +91 9092630929</p>
-            <p className="footer-text"><strong>Email:</strong> help@PranaCare.com</p>
+            <p className="footer-text">
+              <strong>Phone:</strong> {footer.phone}
+            </p>
+
+            <p className="footer-text">
+              <strong>Email:</strong> {footer.email}
+            </p>
           </div>
         </div>
 

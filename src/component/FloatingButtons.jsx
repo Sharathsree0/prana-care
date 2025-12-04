@@ -1,14 +1,25 @@
 import { useState, useEffect } from "react";
 import "./FloatingButtons.css";
+import dbs from "../firebase";
 
 export default function FloatingButtons() {
   const [showTopBtn, setShowTopBtn] = useState(false);
+  const [whatsappNumber, setWhatsappNumber] = useState("9092630929"); // fallback
+
+  // Load WhatsApp number from Firestore
+  const loadContact = async () => {
+    const data = await dbs.readDocument("site_settings", "contact");
+    if (data?.whatsapp) {
+      setWhatsappNumber(data.whatsapp.replace(/[^0-9]/g, "")); // clean format
+    }
+  };
 
   useEffect(() => {
-    const onScroll = () => {
-      setShowTopBtn(window.scrollY > 350);
-    };
-    
+    loadContact();
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setShowTopBtn(window.scrollY > 350);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -20,8 +31,9 @@ export default function FloatingButtons() {
   return (
     <div className="floating-wrapper">
 
+      {/* Dynamic WhatsApp link */}
       <a
-        href="https://wa.me/9092630929?text=Hello%20WeCare,%20I%20need%20more%20info."
+        href={`https://wa.me/${whatsappNumber}?text=Hello%20WeCare,%20I%20need%20more%20info.`}
         target="_blank"
         rel="noopener noreferrer"
         className="floating-btn whatsapp-btn"

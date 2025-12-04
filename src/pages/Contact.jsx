@@ -1,38 +1,54 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaPhoneAlt, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
 import "./Contact.css";
+import dbs from "../firebase";
 
 export default function Contact() {
   const [result, setResult] = useState("");
+  const [myPhoneNumber, setMyPhoneNumber] = useState("919092630929");
+
+  // Load phone number from Firestore
+  const fetchPhoneNumber = async () => {
+    const res = await dbs.readDocument("admin_settings", "phone");
+    if (res?.phone) {
+      // Remove spaces and + symbols for WhatsApp compatibility
+      const cleaned = res.phone.replace(/[\s+]/g, "");
+      setMyPhoneNumber(cleaned);
+    }
+  };
+
+  useEffect(() => {
+    fetchPhoneNumber();
+  }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();
     setResult("Sending...");
-    
+
     const formData = new FormData(event.target);
     const name = formData.get("name");
     const phone = formData.get("phone");
     const service = formData.get("service");
     const message = formData.get("message");
 
+    const id = Date.now().toString();
+
+    // ---- SAVE LEAD TO FIRESTORE ----
     const newLead = {
-      id: Date.now(),
-      name: name,
-      phone: phone,
-      service: service,
-      message: message, 
+      id,
+      name,
+      phone,
+      service,
+      message,
       status: "New",
-      date: new Date().toISOString().split('T')[0]
+      date: new Date().toISOString().split("T")[0],
     };
 
-    const existingLeads = JSON.parse(localStorage.getItem("adminLeads") || "[]");
-    localStorage.setItem("adminLeads", JSON.stringify([newLead, ...existingLeads]));
-    
-    window.dispatchEvent(new Event("storage"));
+    await dbs.addDocument("admin_leads", id, newLead);
 
-    const myPhoneNumber = "919092630929"; 
-    
-    const whatsappUrl = `https://wa.me/${myPhoneNumber}?text=` +
+    // ---- SEND TO WHATSAPP USING FIRESTORE NUMBER ----
+    const whatsappUrl =
+      `https://wa.me/${myPhoneNumber}?text=` +
       `*New Inquiry from Website*%0a` +
       `Name: ${name}%0a` +
       `Phone: ${phone}%0a` +
@@ -40,6 +56,7 @@ export default function Contact() {
       `Message: ${message}`;
 
     window.open(whatsappUrl, "_blank");
+
     setResult("Saved! Opening WhatsApp... ✅");
     event.target.reset();
   };
@@ -54,33 +71,41 @@ export default function Contact() {
         </div>
 
         <div className="contact-grid">
+          
+          {/* LEFT INFO PANEL */}
           <div className="contact-info-card">
             <h3>Contact Information</h3>
-            
+
             <div className="contact-info-item">
-              <div className="contact-icon">
-                <FaMapMarkerAlt size={20} />
+              <div className="contact-icon"><FaMapMarkerAlt size={20} /></div>
+              <div>
+                <h4>Our Location</h4>
+                <p>#123, Green Valley, Bangalore</p>
               </div>
-              <div><h4>Our Location</h4><p>#123, Green Valley, Bangalore</p></div>
             </div>
 
             <div className="contact-info-item">
-              <div className="contact-icon">
-                <FaPhoneAlt size={20} />
+              <div className="contact-icon"><FaPhoneAlt size={20} /></div>
+              <div>
+                <h4>Phone Number</h4>
+                {/* DYNAMIC PHONE NUMBER */}
+                <p>{myPhoneNumber}</p>
               </div>
-              <div><h4>Phone Number</h4><p>+91 90926 30929</p></div>
             </div>
 
             <div className="contact-info-item">
-              <div className="contact-icon">
-                <FaEnvelope size={20} />
+              <div className="contact-icon"><FaEnvelope size={20} /></div>
+              <div>
+                <h4>Email Address</h4>
+                <p>help@pranacare.com</p>
               </div>
-              <div><h4>Email Address</h4><p>help@pranacare.com</p></div>
             </div>
           </div>
 
+          {/* RIGHT CONTACT FORM */}
           <div className="contact-form-card">
             <form onSubmit={onSubmit} className="contact-form">
+
               <div className="form-row">
                 <div className="form-group">
                   <label>Your Name</label>
@@ -112,8 +137,10 @@ export default function Contact() {
               <div className="form-result">
                 {result && <span>{result}</span>}
               </div>
+
             </form>
           </div>
+
         </div>
       </div>
     </section>
