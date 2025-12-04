@@ -8,9 +8,11 @@ export default function FloatingButtons() {
 
   // Load WhatsApp number from Firestore
   const loadContact = async () => {
-    const data = await dbs.readDocument("site_settings", "contact");
-    if (data?.whatsapp) {
-      setWhatsappNumber(data.whatsapp.replace(/[^0-9]/g, "")); // clean format
+    const data = await dbs.readDocument("admin_settings", "phone");
+    if (data?.phone) {
+      // Clean number (remove spaces, +, anything non-digit)
+      const cleaned = data.phone.replace(/[^0-9]/g, "");
+      setWhatsappNumber(cleaned);
     }
   };
 
@@ -31,7 +33,7 @@ export default function FloatingButtons() {
   return (
     <div className="floating-wrapper">
 
-      {/* Dynamic WhatsApp link */}
+      {/* Dynamic WhatsApp Link */}
       <a
         href={`https://wa.me/${whatsappNumber}?text=Hello%20WeCare,%20I%20need%20more%20info.`}
         target="_blank"
