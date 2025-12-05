@@ -10,12 +10,14 @@ export default function AdminLogin() {
   const navigate = useNavigate();
 
   const loadAuthData = async () => {
+    console.log("HI")
     const data = await dbs.readDocument("admin_settings", "auth");
-    const user = JSON.parse(localStorage.getItem("adminAuth")||[])
+    const user = JSON.parse(localStorage.getItem("adminAuth"))
     if(user){
       navigate("/admin");
     }
     if (!data) {
+
       await dbs.addDocument("admin_settings", "auth", {
         email: "admin@gmail.com",
         password: "admin123",
@@ -25,7 +27,7 @@ export default function AdminLogin() {
       setAuthData(data);
     }
   };
-
+console.log(authData)
   useEffect(() => {
     loadAuthData();
   }, []);
