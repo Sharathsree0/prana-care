@@ -83,7 +83,7 @@ export default function Contact() {
               <div className="contact-icon"><FaMapMarkerAlt size={20} /></div>
               <div>
                 <h4>Our Location</h4>
-                <p>#123, Green Valley, Bangalore</p>
+                <p>K.P.Tower,kalasagar,Edakkara-679331,Kerala</p>
               </div>
             </div>
 
