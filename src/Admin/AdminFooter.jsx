@@ -6,13 +6,14 @@ import dbs from "../firebase";
 
 export default function AdminFooter() {
   const [footer, setFooter] = useState({
-    logo: "PranaHomeCare",
+    logoPrefix: "PranaHome", // First part (Green)
+    logoSuffix: "Care",      // Second part (White)
     desc: "Professional home nursing and elderly care services delivered with compassion.",
     facebook: "https://facebook.com",
     instagram: "https://instagram.com",
     phone: "+91 9092630929",
     email: "help@pranacare.com",
-    copyrightText: "PranaCare", // New field
+    copyrightText: "PranaCare", 
     links: [
       { label: "Home", link: "#home" },
       { label: "About Us", link: "#about" },
@@ -46,14 +47,12 @@ export default function AdminFooter() {
     setFooter({ ...footer, [name]: value });
   };
 
-  // Handle Services (Comma Separated)
   const handleServicesChange = (e) => {
     const value = e.target.value;
     const array = value.split(",").map(item => item.trim());
     setFooter({ ...footer, services: array });
   };
 
-  // Handle Links (Array of Objects)
   const handleLinkChange = (index, field, value) => {
     const newLinks = [...footer.links];
     newLinks[index][field] = value;
@@ -83,9 +82,28 @@ export default function AdminFooter() {
 
           <form className="admin-form" onSubmit={handleSave}>
             
+            {/* SPLIT LOGO INPUTS */}
             <div className="form-group">
-              <label>Footer Logo Text</label>
-              <input type="text" name="logo" value={footer.logo} onChange={handleChange} />
+              <label>Footer Logo</label>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <input 
+                  type="text" 
+                  name="logoPrefix" 
+                  placeholder="Green Part (e.g. Prana)"
+                  value={footer.logoPrefix || ""} 
+                  onChange={handleChange}
+                  style={{ flex: 1 }}
+                />
+                <input 
+                  type="text" 
+                  name="logoSuffix" 
+                  placeholder="White Part (e.g. Care)"
+                  value={footer.logoSuffix || ""} 
+                  onChange={handleChange} 
+                  style={{ flex: 1 }}
+                />
+              </div>
+              <small style={{ color: "#666" }}>First box is Green, Second box is White.</small>
             </div>
 
             <div className="form-group">
@@ -97,38 +115,24 @@ export default function AdminFooter() {
               <label>Services List (Separate with commas)</label>
               <textarea 
                 rows="3"
-                value={footer.services.join(", ")} 
+                value={(footer.services || []).join(", ")} 
                 onChange={handleServicesChange} 
                 style={{ width: "100%", padding: "10px", border: "1px solid #ccc", borderRadius: "8px" }} 
               />
-              <small style={{color: "#666"}}>Example: Elderly Care, Baby Care, Physio</small>
             </div>
 
-            {/* QUICK LINKS EDITOR */}
             <div className="form-group">
               <label>Quick Links</label>
               {footer.links.map((link, index) => (
                 <div key={index} style={{ display: "flex", gap: "10px", marginBottom: "8px" }}>
-                  <input 
-                    type="text" 
-                    value={link.label} 
-                    onChange={(e) => handleLinkChange(index, 'label', e.target.value)}
-                    placeholder="Label"
-                    style={{ flex: 1 }}
-                  />
-                  <input 
-                    type="text" 
-                    value={link.link} 
-                    onChange={(e) => handleLinkChange(index, 'link', e.target.value)}
-                    placeholder="URL (#home)"
-                    style={{ flex: 1 }}
-                  />
+                  <input type="text" value={link.label} onChange={(e) => handleLinkChange(index, 'label', e.target.value)} placeholder="Label" style={{ flex: 1 }} />
+                  <input type="text" value={link.link} onChange={(e) => handleLinkChange(index, 'link', e.target.value)} placeholder="URL (#home)" style={{ flex: 1 }} />
                 </div>
               ))}
             </div>
 
             <div className="form-group">
-              <label>Copyright Name (e.g. PranaCare)</label>
+              <label>Copyright Name</label>
               <input type="text" name="copyrightText" value={footer.copyrightText || ""} onChange={handleChange} />
             </div>
 

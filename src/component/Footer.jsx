@@ -6,7 +6,8 @@ import dbs from "../firebase";
 
 export default function Footer() {
   const [footer, setFooter] = useState({
-    logo: "PranaHomeCare",
+    logoPrefix: "PranaHome",
+    logoSuffix: "Nursing",
     desc: "Professional home nursing and elderly care services delivered with compassion.",
     facebook: "https://facebook.com",
     instagram: "https://instagram.com",
@@ -26,6 +27,7 @@ export default function Footer() {
       "Mother & Baby Care"
     ]
   });
+
   const loadFooter = async () => {
     const data = await dbs.readDocument("site_settings", "footer");
     if (data) setFooter((prev) => ({ ...prev, ...data }));
@@ -42,7 +44,11 @@ export default function Footer() {
         <div className="footer-grid">
 
           <div className="footer-col">
-            <h3 className="footer-logo">{footer.logo}</h3>
+            {/* UPDATED LOGO STRUCTURE */}
+            <h3 className="footer-logo">
+              {footer.logoPrefix || "PranaHome"}
+              <span>{footer.logoSuffix || "Care"}</span>
+            </h3>
 
             <p className="footer-desc">{footer.desc}</p>
 

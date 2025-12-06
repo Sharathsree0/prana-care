@@ -1,10 +1,15 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Admin.css";
 import dbs from "../firebase";
 
 export default function AdminTeam() {
   const [team, setTeam] = useState([]);
+  
+  // Form State
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  const [imgUrl, setImgUrl] = useState(""); 
+  const [loading, setLoading] = useState(false);
 
   const loadTeam = async () => {
     const data = await dbs.readCollection("site_team");
@@ -15,22 +20,31 @@ export default function AdminTeam() {
     loadTeam();
   }, []);
 
-  const handleAdd = async () => {
-    const name = prompt("Enter Specialist Name:");
-    if (!name) return;
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!name || !role) return alert("Please enter Name and Role");
 
-    const role = prompt("Enter Role (e.g. Senior Nurse):");
+    setLoading(true);
+    
+    const finalImg = imgUrl || "https://dummyimage.com/400x400/ccc/000?text=User";
 
-    const img = prompt("Paste Image URL (optional):");
-    const finalImg = img || "https://dummyimage.com/400x400/ccc/000?text=User";
+    try {
+      const id = Date.now().toString();
+      const newMember = { id, name, role, img: finalImg };
 
-    const id = Date.now().toString();
+      await dbs.addDocument("site_team", id, newMember);
+      
+      setName("");
+      setRole("");
+      setImgUrl("");
+      loadTeam();
 
-    const newMember = { id, name, role, img: finalImg };
-
-    await dbs.addDocument("site_team", id, newMember);
-
-    loadTeam();
+    } catch (err) {
+      console.error(err);
+      alert("Error adding member");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -43,29 +57,72 @@ export default function AdminTeam() {
     <section>
       <div className="admin-header-row">
         <h2>Manage Specialists</h2>
-        <button className="admin-btn" onClick={handleAdd}>+ Add Member</button>
+      </div>
+
+      {/* URL BASED FORM */}
+      <div className="stat-card" style={{ marginBottom: "30px", maxWidth: "100%" }}>
+        <h3 style={{fontSize: "16px", marginBottom: "15px"}}>Add New Member</h3>
+        <form onSubmit={handleAdd} style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "flex-end" }}>
+          
+          <div style={{ flex: 1, minWidth: "200px" }}>
+            <label style={{fontSize: "12px", color: "#666"}}>Name</label>
+            <input 
+              type="text" 
+              value={name} 
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Dr. John Doe"
+              style={{ width: "100%", padding: "8px", border: "1px solid #ccc", borderRadius: "6px" }}
+              required
+            />
+          </div>
+
+          <div style={{ flex: 1, minWidth: "200px" }}>
+            <label style={{fontSize: "12px", color: "#666"}}>Role</label>
+            <input 
+              type="text" 
+              value={role} 
+              onChange={(e) => setRole(e.target.value)}
+              placeholder="Senior Nurse"
+              style={{ width: "100%", padding: "8px", border: "1px solid #ccc", borderRadius: "6px" }}
+              required
+            />
+          </div>
+
+          <div style={{ flex: 1, minWidth: "200px" }}>
+            <label style={{fontSize: "12px", color: "#666"}}>Photo URL (Paste Link)</label>
+            <input 
+              type="text" 
+              value={imgUrl}
+              onChange={(e) => setImgUrl(e.target.value)}
+              placeholder="https://example.com/photo.jpg"
+              style={{ width: "100%", padding: "8px", border: "1px solid #ccc", borderRadius: "6px" }}
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="admin-btn"
+            disabled={loading}
+            style={{ height: "38px" }}
+          >
+            {loading ? "Saving..." : "+ Add Member"}
+          </button>
+        </form>
       </div>
 
       <div className="stat-grid">
         {team.map((member) => (
           <div key={member.id} className="stat-card" style={{ textAlign: "center" }}>
-            
             <img
               src={member.img}
               alt={member.name}
               style={{
-                width: "80px",
-                height: "80px",
-                borderRadius: "50%",
-                objectFit: "cover",
-                marginBottom: "10px"
+                width: "80px", height: "80px", borderRadius: "50%",
+                objectFit: "cover", marginBottom: "10px"
               }}
             />
-
             <h3>{member.name}</h3>
-
             <p style={{ color: "#059669", fontSize: "13px" }}>{member.role}</p>
-
             <button
               className="action-btn"
               onClick={() => handleDelete(member.id)}
@@ -73,7 +130,6 @@ export default function AdminTeam() {
             >
               Remove
             </button>
-
           </div>
         ))}
       </div>

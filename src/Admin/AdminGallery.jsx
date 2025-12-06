@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Admin.css";
 import dbs from "../firebase"; 
@@ -6,7 +7,9 @@ export default function AdminGallery() {
   const [section, setSection] = useState("gallery_hero");
   const [images, setImages] = useState([]);
   const [services, setServices] = useState([]);
-  const [uploading, setUploading] = useState(false); // To show loading state
+  
+  // URL Input State
+  const [urlInput, setUrlInput] = useState("");
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -26,35 +29,18 @@ export default function AdminGallery() {
     loadGallery(section);
   }, [section]);
 
-  // NEW: Handle File Upload
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const handleAdd = async () => {
+    if (!urlInput.trim()) return alert("Please paste an image URL first.");
 
-    setUploading(true);
-    try {
-        // Upload to Firebase Storage
-        const url = await dbs.uploadImage(file, section);
-        
-        // Save URL to Firestore
-        const docId = crypto.randomUUID();
-        await dbs.addDocument(section, docId, { url });
-        
-        // Refresh
-        loadGallery(section);
-    } catch (err) {
-        alert("Error uploading image.");
-        console.error(err);
-    } finally {
-        setUploading(false);
-        // Clear input so same file can be selected again if needed
-        e.target.value = null; 
-    }
+    const docId = crypto.randomUUID();
+    await dbs.addDocument(section, docId, { url: urlInput });
+    
+    setUrlInput(""); // Clear input
+    loadGallery(section);
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Remove this image?")) return;
-
     await dbs.deleteDocument(section, id);
     loadGallery(section);
   };
@@ -72,30 +58,25 @@ export default function AdminGallery() {
         >
           <option value="gallery_hero">Hero (Home Banner)</option>
           <option value="gallery_about">About Us Image</option>
-          
            {services.map((s) => (
             <option key={s.id} value={`gallery_service_${s.id}`}>
               Service: {s.title}
             </option>
           ))}
         </select>
+      </div>
 
-        {/* HIDDEN FILE INPUT */}
+      {/* NEW URL INPUT AREA */}
+      <div className="stat-card" style={{ marginBottom: "20px", display: "flex", gap: "10px", alignItems: "center" }}>
         <input 
-            type="file" 
-            id="gallery-upload" 
-            style={{ display: "none" }} 
-            accept="image/*"
-            onChange={handleFileUpload}
+            type="text" 
+            placeholder="Paste Image URL here (https://...)" 
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            style={{ flex: 1, padding: "10px", border: "1px solid #ccc", borderRadius: "6px" }}
         />
-
-        {/* BUTTON TRIGGERS INPUT */}
-        <button 
-            className="admin-btn" 
-            onClick={() => document.getElementById("gallery-upload").click()}
-            disabled={uploading}
-        >
-          {uploading ? "Uploading... ⏳" : "+ Upload Photo"}
+        <button className="admin-btn" onClick={handleAdd}>
+          + Add Photo
         </button>
       </div>
 

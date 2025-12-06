@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from './component/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -17,36 +17,52 @@ import AdminGallery from "./Admin/AdminGallery";
 import AdminTeam from "./Admin/AdminTeam";
 import AdminAbout from "./Admin/AdminAbout";
 import AdminHome from "./Admin/AdminHome";
-import dbs from "./firebase"; 
 import AdminFooter from "./Admin/AdminFooter";
+import dbs from "./firebase";
+
+// Helper component to log visits
+const PublicWrapper = ({ children, darkMode, toggleTheme }) => {
+  useEffect(() => {
+    dbs.logVisitor();
+  }, []);
+
+  return (
+    <>
+      {/* Pass theme props to Navbar */}
+      <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
+      {children}
+      <Footer />
+      <FloatingButtons />
+    </>
+  );
+};
 
 export default function App() {
+  // --- THEME STATE ---
+  const [darkMode, setDarkMode] = useState(false);
 
-  // Create a wrapper component to handle the logging
-  const PublicSite = () => {
-    useEffect(() => {
-      // Log a visit when the public site loads
-      dbs.logVisitor();
-    }, []);
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [darkMode]);
 
-    return (
-      <>
-        <Navbar />
-        <section id="home"><Home /></section>
-        <section id="about"><About /></section>
-        <section id="services"><Services /></section>
-        <section id="contact"><Contact /></section>
-        <Footer />
-        <FloatingButtons />
-      </>
-    );
-  };
+  const toggleTheme = () => setDarkMode(!darkMode);
+  // -------------------
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* Use the PublicSite component here */}
-        <Route path="/" element={<PublicSite />} />
+        <Route path="/" element={
+          <PublicWrapper darkMode={darkMode} toggleTheme={toggleTheme}>
+            <section id="home"><Home /></section>
+            <section id="about"><About /></section>
+            <section id="services"><Services /></section>
+            <section id="contact"><Contact /></section>
+          </PublicWrapper>
+        } />
 
         <Route path="/admin/login" element={<AdminLogin />} />
 
@@ -58,8 +74,8 @@ export default function App() {
           <Route path="home" element={<AdminHome />} />
           <Route path="services" element={<AdminServices />} /> 
           <Route path="gallery" element={<AdminGallery />} />
-          <Route path="settings" element={<AdminSettings />} />
           <Route path="footer" element={<AdminFooter />} />
+          <Route path="settings" element={<AdminSettings />} />
         </Route>
 
         <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />
