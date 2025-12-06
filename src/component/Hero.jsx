@@ -13,6 +13,8 @@ export default function Hero() {
 
   const [gallery, setGallery] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  // State for the call number
+  const [callNumber, setCallNumber] = useState("+91 9092630929");
 
   const fetchHeroText = async () => {
     const data = await dbs.readDocument("site_content", "home_hero");
@@ -38,9 +40,18 @@ export default function Hero() {
     setGallery(urls.length > 0 ? urls : ["https://dummyimage.com/600x400/343a40/6c757d"]);
   };
 
+  // Fetch the phone number from Admin Settings
+  const fetchPhone = async () => {
+    const data = await dbs.readDocument("admin_settings", "phone");
+    if (data?.phone) {
+      setCallNumber(data.phone);
+    }
+  };
+
   useEffect(() => {
     fetchHeroText();
     fetchHeroGallery();
+    fetchPhone();
   }, []);
 
   useEffect(() => {
@@ -52,6 +63,14 @@ export default function Hero() {
 
     return () => clearInterval(interval);
   }, [gallery]);
+
+  // Handle Call Logic
+  const handleCall = (e) => {
+    e.preventDefault();
+    if (window.confirm(`Do you want to call ${callNumber}?`)) {
+      window.location.href = `tel:${callNumber}`;
+    }
+  };
 
   return (
     <header id="home" className="hero">
@@ -68,7 +87,10 @@ export default function Hero() {
           <p className="hero-text">{content.desc}</p>
 
           <div className="hero-actions">
-            <a href="#contact" className="hero-btn hero-btn-primary">Book Now</a>
+            {/* CHANGED: Calls the number instead of scrolling */}
+            <a href="#" onClick={handleCall} className="hero-btn hero-btn-primary">
+              Call Us
+            </a>
             <a href="#services" className="hero-btn hero-btn-outline">Our Services</a>
           </div>
 

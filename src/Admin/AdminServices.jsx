@@ -19,8 +19,7 @@ export default function AdminServices() {
     const title = prompt("Enter Service Name:");
     if (!title) return;
 
-    const price = prompt("Enter Price (e.g. ₹500/day):");
-    if (!price) return;
+    // Removed the price prompt here
 
     const imgUrl = prompt("Enter Image URL (optional):");
 
@@ -29,7 +28,7 @@ export default function AdminServices() {
     const newService = {
       id,
       title,
-      price,
+      // Removed price property here
       active: true
     };
 
@@ -76,7 +75,7 @@ export default function AdminServices() {
             style={{ opacity: s.active ? 1 : 0.6 }}
           >
             <h3>{s.title}</h3>
-            <p className="service-price">{s.price}</p>
+            {/* Price display removed here */}
 
             <div className="service-status">
               <span

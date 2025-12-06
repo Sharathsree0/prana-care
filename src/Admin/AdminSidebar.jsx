@@ -51,6 +51,7 @@ export default function AdminSidebar() {
         <NavLink to="/admin/gallery" className="nav-item">Gallery</NavLink>
         <NavLink to="/admin/home" className="nav-item">Home Info</NavLink>
         <NavLink to="/admin/about" className="nav-item">About Info</NavLink>
+        <NavLink to="/admin/footer" className="nav-item">Footer Info</NavLink>
         <NavLink to="/admin/settings" className="nav-item">Settings</NavLink>
       </nav>
 

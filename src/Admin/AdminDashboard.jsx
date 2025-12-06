@@ -9,19 +9,23 @@ export default function AdminDashboard() {
     totalLeads: 0,
     openLeads: 0,
     servicesCount: 0,
+    siteVisits: 0, 
     recentLeads: []
   });
 
   const loadDashboardData = async () => {
-    
     const leads = await dbs.readCollection("admin_leads");
-
     const services = await dbs.readCollection("services");
+    
+    // Fetch visitor count
+    const visitData = await dbs.readDocument("site_stats", "visitors");
+    const visitCount = visitData ? visitData.count : 0;
 
     setStats({
       totalLeads: leads.length,
       openLeads: leads.filter((l) => l.status !== "Closed").length,
       servicesCount: services.length,
+      siteVisits: visitCount, 
       recentLeads: leads.slice(0, 3) 
     });
   };
@@ -29,6 +33,16 @@ export default function AdminDashboard() {
   useEffect(() => {
     loadDashboardData();
   }, []);
+
+  // Handler for reset button
+  const handleResetVisits = async () => {
+    if(!window.confirm("Are you sure you want to reset the visitor count to 0?")) return;
+    
+    await dbs.resetVisitorCount();
+    
+    // Reload data immediately so you see the 0
+    loadDashboardData();
+  };
 
   return (
     <section className="admin-dashboard">
@@ -54,9 +68,27 @@ export default function AdminDashboard() {
           <div className="stat-label">Services</div>
         </div>
 
-        <div className="stat-card">
-          <div className="stat-value">4.9★</div>
-          <div className="stat-label">Satisfaction</div>
+        {/* Site Visits Card with Reset Button */}
+        <div className="stat-card" style={{ position: "relative" }}>
+          <div className="stat-value">{stats.siteVisits}</div>
+          <div className="stat-label">Site Visitors</div>
+          
+          <button 
+            onClick={handleResetVisits}
+            style={{
+              marginTop: "10px",
+              padding: "4px 10px",
+              fontSize: "11px",
+              border: "1px solid #fee2e2",
+              background: "#fff1f2",
+              color: "#e11d48",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontWeight: "600"
+            }}
+          >
+            Reset
+          </button>
         </div>
       </div>
 

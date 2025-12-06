@@ -11,24 +11,29 @@ export default function AdminSettings() {
   const [todoInput, setTodoInput] = useState("");
   const [editId, setEditId] = useState(null);
 
+  // SEPARATE STATES FOR CALL AND WHATSAPP
   const [companyPhone, setCompanyPhone] = useState("");
+  const [companyWhatsapp, setCompanyWhatsapp] = useState("");
   const [phoneMsg, setPhoneMsg] = useState("");
 
   const loadPhone = async () => {
     const data = await dbs.readDocument("admin_settings", "phone");
     if (data) {
-      setCompanyPhone(data.phone);
+      setCompanyPhone(data.phone || "");
+      setCompanyWhatsapp(data.whatsapp || "");
     } else {
-      await dbs.addDocument("admin_settings", "phone", { phone: "+91 9092630929" });
+      await dbs.addDocument("admin_settings", "phone", { 
+        phone: "+91 9092630929",
+        whatsapp: "+91 9092630929"
+      });
       setCompanyPhone("+91 9092630929");
+      setCompanyWhatsapp("+91 9092630929");
     }
   };
 
   const loadPassword = async () => {
     const data = await dbs.readDocument("admin_settings", "auth");
-    if (data) {
-      // we don't show password, but doc must exist
-    } else {
+    if (!data) {
       await dbs.addDocument("admin_settings", "auth", {
         email: "admin@gmail.com",
         password: "1234"
@@ -50,31 +55,29 @@ export default function AdminSettings() {
   const handlePhoneUpdate = async (e) => {
     e.preventDefault();
 
-    if (!companyPhone.trim()) {
-      setPhoneMsg("Phone number cannot be empty ❌");
+    if (!companyPhone.trim() || !companyWhatsapp.trim()) {
+      setPhoneMsg("Phone numbers cannot be empty ❌");
       return;
     }
 
     await dbs.updateOrSetDocument("admin_settings", "phone", {
-      phone: companyPhone
+      phone: companyPhone,
+      whatsapp: companyWhatsapp
     });
 
-    setPhoneMsg("Phone number updated successfully! ✅");
+    setPhoneMsg("Contact numbers updated successfully! ✅");
     setTimeout(() => setPhoneMsg(""), 2000);
   };
 
   const handlePasswordUpdate = async (e) => {
     e.preventDefault();
-
     if (newPassword.length < 4) {
       setMessage("Password must be at least 4 characters ❌");
       return;
     }
-
     await dbs.updateOrSetDocument("admin_settings", "auth", {
       password: newPassword
     });
-
     setMessage("Password updated successfully! ✅");
     setNewPassword("");
   };
@@ -84,19 +87,12 @@ export default function AdminSettings() {
     if (!todoInput.trim()) return;
 
     if (editId) {
-      await dbs.updateDocument("admin_todos", String(editId), {
-        text: todoInput
-      });
+      await dbs.updateDocument("admin_todos", String(editId), { text: todoInput });
       setEditId(null);
     } else {
       const id = Date.now().toString();
-      await dbs.addDocument("admin_todos", id, {
-        id,
-        text: todoInput,
-        completed: false
-      });
+      await dbs.addDocument("admin_todos", id, { id, text: todoInput, completed: false });
     }
-
     setTodoInput("");
     loadTodos();
   };
@@ -108,9 +104,7 @@ export default function AdminSettings() {
 
   const toggleTodo = async (id) => {
     const item = todos.find((t) => t.id === id);
-    await dbs.updateDocument("admin_todos", String(id), {
-      completed: !item.completed
-    });
+    await dbs.updateDocument("admin_todos", String(id), { completed: !item.completed });
     loadTodos();
   };
 
@@ -127,13 +121,11 @@ export default function AdminSettings() {
 
         <div className="stat-card">
           <h3>Admin Profile</h3>
-
           <form className="admin-form" onSubmit={handlePasswordUpdate}>
             <div className="form-group">
               <label>Admin Email</label>
               <input type="email" defaultValue="admin@gmail.com" disabled />
             </div>
-
             <div className="form-group">
               <label>New Password</label>
               <input
@@ -144,51 +136,47 @@ export default function AdminSettings() {
                 onChange={(e) => setNewPassword(e.target.value)}
               />
             </div>
-
             <button className="admin-btn">Update Password</button>
-
-            {message && (
-              <p style={{ marginTop: "10px", fontWeight: "bold" }}>
-                {message}
-              </p>
-            )}
+            {message && <p style={{ marginTop: "10px", fontWeight: "bold" }}>{message}</p>}
           </form>
         </div>
+        
+        {/* NEW CONTACT NUMBERS FORM */}
         <div className="stat-card">
-          <h3>Company Phone Number</h3>
+          <h3>Contact Numbers</h3>
 
           <form className="admin-form" onSubmit={handlePhoneUpdate}>
             <div className="form-group">
-              <label>Phone Number</label>
+              <label>Call Number (Public)</label>
               <input
                 type="text"
-                placeholder="+91 90926 30929"
+                placeholder="+91..."
                 required
                 value={companyPhone}
                 onChange={(e) => setCompanyPhone(e.target.value)}
               />
             </div>
 
-            <button className="admin-btn">Update Phone</button>
+            <div className="form-group">
+              <label>WhatsApp / Message Number</label>
+              <input
+                type="text"
+                placeholder="+91..."
+                required
+                value={companyWhatsapp}
+                onChange={(e) => setCompanyWhatsapp(e.target.value)}
+              />
+            </div>
 
-            {phoneMsg && (
-              <p style={{ marginTop: "10px", fontWeight: "bold" }}>
-                {phoneMsg}
-              </p>
-            )}
+            <button className="admin-btn">Update Contact Info</button>
+
+            {phoneMsg && <p style={{ marginTop: "10px", fontWeight: "bold" }}>{phoneMsg}</p>}
           </form>
         </div>
+
         <div className="stat-card">
           <h3>Feedback To-Do List</h3>
-
-          <form
-            onSubmit={handleTodoSubmit}
-            style={{
-              display: "flex",
-              gap: "10px",
-              marginBottom: "20px"
-            }}
-          >
+          <form onSubmit={handleTodoSubmit} style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
             <input
               type="text"
               placeholder="Add new task..."
@@ -196,66 +184,23 @@ export default function AdminSettings() {
               onChange={(e) => setTodoInput(e.target.value)}
               style={{ flex: 1, padding: "8px" }}
             />
-
-            <button type="submit" className="admin-btn" style={{ width: "auto" }}>
-              {editId ? "Update" : "Add"}
-            </button>
+            <button type="submit" className="admin-btn" style={{ width: "auto" }}>{editId ? "Update" : "Add"}</button>
           </form>
 
           <ul style={{ listStyle: "none", padding: 0 }}>
             {todos.map((todo) => (
-              <li
-                key={todo.id}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  background: "#f9f9f9",
-                  padding: "10px",
-                  marginBottom: "8px",
-                  borderRadius: "5px",
-                  border: "1px solid #eee"
-                }}
-              >
+              <li key={todo.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#f9f9f9", padding: "10px", marginBottom: "8px", borderRadius: "5px", border: "1px solid #eee" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <input
-                    type="checkbox"
-                    checked={todo.completed}
-                    onChange={() => toggleTodo(todo.id)}
-                    style={{ cursor: "pointer" }}
-                  />
-                  <span
-                    style={{
-                      textDecoration: todo.completed ? "line-through" : "none",
-                      color: todo.completed ? "#888" : "#000"
-                    }}
-                  >
-                    {todo.text}
-                  </span>
+                  <input type="checkbox" checked={todo.completed} onChange={() => toggleTodo(todo.id)} style={{ cursor: "pointer" }} />
+                  <span style={{ textDecoration: todo.completed ? "line-through" : "none", color: todo.completed ? "#888" : "#000" }}>{todo.text}</span>
                 </div>
-
                 <div style={{ display: "flex", gap: "5px" }}>
-                  <button
-                    onClick={() => startEdit(todo)}
-                    style={{ fontSize: "12px", cursor: "pointer" }}
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={() => deleteTodo(todo.id)}
-                    style={{ fontSize: "12px", cursor: "pointer", color: "red" }}
-                  >
-                    🗑️
-                  </button>
+                  <button onClick={() => startEdit(todo)} style={{ fontSize: "12px", cursor: "pointer" }}>✏️</button>
+                  <button onClick={() => deleteTodo(todo.id)} style={{ fontSize: "12px", cursor: "pointer", color: "red" }}>🗑️</button>
                 </div>
               </li>
             ))}
-
-            {todos.length === 0 && (
-              <p style={{ color: "#888", fontStyle: "italic" }}>
-                No tasks yet...
-              </p>
-            )}
+            {todos.length === 0 && <p style={{ color: "#888", fontStyle: "italic" }}>No tasks yet...</p>}
           </ul>
         </div>
       </div>

@@ -1,8 +1,9 @@
 /* eslint-disable no-useless-catch */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
-import { getFirestore, collection, doc,  setDoc, getDoc, getDocs,  updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js";
-
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, increment } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js";
+// 1. IMPORT STORAGE FUNCTIONS
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPoz3EmMMxIvTDbeFlF6LjbalnMfHhZG0",
@@ -13,21 +14,55 @@ const firebaseConfig = {
   appId: "1:1062637887294:web:120f63417739030b33d66f",
   measurementId: "G-WMPY9G8EHT"
 };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 // Get a reference to the Firestore database
 const db = getFirestore(app);
+// 2. INITIALIZE STORAGE
+const storage = getStorage(app);
 
-
-// Google login function
 const dbs = {
+    // --- NEW UPLOAD FUNCTION ---
+    uploadImage: async (file, folder = "uploads") => {
+        try {
+            // Create a unique reference for the file
+            const storageRef = ref(storage, `${folder}/${Date.now()}_${file.name}`);
+            // Upload the file
+            const snapshot = await uploadBytes(storageRef, file);
+            // Get the public URL
+            const url = await getDownloadURL(snapshot.ref);
+            return url;
+        } catch (error) {
+            console.error("Upload failed:", error);
+            throw error;
+        }
+    },
+    // ---------------------------
+
+	logVisitor: async () => {
+		const docRef = doc(db, "site_stats", "visitors");
+		try {
+			await setDoc(docRef, { count: increment(1) }, { merge: true });
+		} catch (e) {
+			console.error("Error logging visit:", e);
+		}
+	},
+
+    resetVisitorCount: async () => {
+        const docRef = doc(db, "site_stats", "visitors");
+        try {
+            await setDoc(docRef, { count: 0 }, { merge: true });
+        } catch (e) {
+            console.error("Error resetting visits:", e);
+        }
+    },
+
 	addDocument: async (collectionName, documentId, data) => {
 		try {
 			await setDoc(doc(db, collectionName, documentId), data);
-			// console.log(`Document written with ID: ${documentId}`);
 		} catch (e) {
-			// console.error('Error adding document: ', e);
 			throw e;
 		}
 	},

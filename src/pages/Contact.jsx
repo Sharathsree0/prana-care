@@ -1,23 +1,27 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
-import { FaPhoneAlt, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
+import { FaPhoneAlt, FaMapMarkerAlt, FaEnvelope, FaWhatsapp } from "react-icons/fa";
 import "./Contact.css";
 import dbs from "../firebase";
 
 export default function Contact() {
   const [result, setResult] = useState("");
-  const [myPhoneNumber, setMyPhoneNumber] = useState("919092630929");
+  // Separate states for Call and Message numbers
+  const [callNumber, setCallNumber] = useState("919092630929");
+  const [messageNumber, setMessageNumber] = useState("919092630929");
 
-  const fetchPhoneNumber = async () => {
+  const fetchContactInfo = async () => {
     const res = await dbs.readDocument("admin_settings", "phone");
-    if (res?.phone) {
-      const cleaned = res.phone.replace(/[\s+]/g, "");
-      setMyPhoneNumber(cleaned);
+    if (res) {
+      if (res.phone) setCallNumber(res.phone);
+      // Prioritize whatsapp field, otherwise fallback to phone
+      if (res.whatsapp) setMessageNumber(res.whatsapp);
+      else if (res.phone) setMessageNumber(res.phone);
     }
   };
 
   useEffect(() => {
-    fetchPhoneNumber();
+    fetchContactInfo();
   }, []);
 
   const onSubmit = async (event) => {
@@ -44,8 +48,11 @@ export default function Contact() {
 
     await dbs.addDocument("admin_leads", id, newLead);
 
+    // Use messageNumber for WhatsApp URL
+    const cleanWhatsApp = messageNumber.replace(/[^0-9]/g, "");
+
     const whatsappUrl =
-      `https://wa.me/${myPhoneNumber}?text=` +
+      `https://wa.me/${cleanWhatsApp}?text=` +
       `*New Inquiry from Website*%0a` +
       `Name: ${name}%0a` +
       `Phone: ${phone}%0a` +
@@ -83,8 +90,22 @@ export default function Contact() {
             <div className="contact-info-item">
               <div className="contact-icon"><FaPhoneAlt size={20} /></div>
               <div>
-                <h4>Phone Number</h4>
-                <p>{myPhoneNumber}</p>
+                <h4>Call Us</h4>
+                <p>
+                  <a href={`tel:${callNumber}`} style={{ color: "inherit", textDecoration: "none" }}>
+                    {callNumber}
+                  </a>
+                </p>
+              </div>
+            </div>
+
+            <div className="contact-info-item">
+              <div className="contact-icon" style={{ background: "#25d366", color: "white" }}>
+                <FaWhatsapp size={22} />
+              </div>
+              <div>
+                <h4>WhatsApp / Message</h4>
+                <p>{messageNumber}</p>
               </div>
             </div>
 

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import "./Admin.css";
 import dbs from "../firebase"; 
@@ -7,6 +6,7 @@ export default function AdminGallery() {
   const [section, setSection] = useState("gallery_hero");
   const [images, setImages] = useState([]);
   const [services, setServices] = useState([]);
+  const [uploading, setUploading] = useState(false); // To show loading state
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -26,20 +26,30 @@ export default function AdminGallery() {
     loadGallery(section);
   }, [section]);
 
-  const handleAdd = async () => {
-    let nameForPrompt = section;
-    if (section.startsWith("gallery_service_")) {
-        nameForPrompt = "Service Gallery";
-    } else {
-        nameForPrompt = section.replace("gallery_", "").toUpperCase();
+  // NEW: Handle File Upload
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+        // Upload to Firebase Storage
+        const url = await dbs.uploadImage(file, section);
+        
+        // Save URL to Firestore
+        const docId = crypto.randomUUID();
+        await dbs.addDocument(section, docId, { url });
+        
+        // Refresh
+        loadGallery(section);
+    } catch (err) {
+        alert("Error uploading image.");
+        console.error(err);
+    } finally {
+        setUploading(false);
+        // Clear input so same file can be selected again if needed
+        e.target.value = null; 
     }
-
-    const url = prompt(`Paste image URL for ${nameForPrompt}:`);
-    if (!url) return;
-
-    const docId = crypto.randomUUID();
-    await dbs.addDocument(section, docId, { url });
-    loadGallery(section);
   };
 
   const handleDelete = async (id) => {
@@ -70,8 +80,22 @@ export default function AdminGallery() {
           ))}
         </select>
 
-        <button className="admin-btn" onClick={handleAdd}>
-          + Add Photo
+        {/* HIDDEN FILE INPUT */}
+        <input 
+            type="file" 
+            id="gallery-upload" 
+            style={{ display: "none" }} 
+            accept="image/*"
+            onChange={handleFileUpload}
+        />
+
+        {/* BUTTON TRIGGERS INPUT */}
+        <button 
+            className="admin-btn" 
+            onClick={() => document.getElementById("gallery-upload").click()}
+            disabled={uploading}
+        >
+          {uploading ? "Uploading... ⏳" : "+ Upload Photo"}
         </button>
       </div>
 

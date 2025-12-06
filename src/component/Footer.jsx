@@ -12,6 +12,7 @@ export default function Footer() {
     instagram: "https://instagram.com",
     phone: "+91 9092630929",
     email: "help@pranacare.com",
+    copyrightText: "PranaCare",
     links: [
       { label: "Home", link: "#home" },
       { label: "About Us", link: "#about" },
@@ -27,7 +28,7 @@ export default function Footer() {
   });
   const loadFooter = async () => {
     const data = await dbs.readDocument("site_settings", "footer");
-    if (data) setFooter(data);
+    if (data) setFooter((prev) => ({ ...prev, ...data }));
   };
 
   useEffect(() => {
@@ -59,7 +60,7 @@ export default function Footer() {
           <div className="footer-col">
             <h4 className="footer-title">Links</h4>
             <ul className="footer-links">
-              {footer.links.map((item, idx) => (
+              {footer.links && footer.links.map((item, idx) => (
                 <li key={idx}><a href={item.link}>{item.label}</a></li>
               ))}
             </ul>
@@ -68,7 +69,7 @@ export default function Footer() {
           <div className="footer-col">
             <h4 className="footer-title">Our Care</h4>
             <ul className="footer-list">
-              {footer.services.map((srv, idx) => (
+              {footer.services && footer.services.map((srv, idx) => (
                 <li key={idx}>{srv}</li>
               ))}
             </ul>
@@ -88,7 +89,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          © {new Date().getFullYear()} PranaCare. All rights reserved.
+          © {new Date().getFullYear()} {footer.copyrightText || "PranaCare"}. All rights reserved.
         </div>
 
       </div>
