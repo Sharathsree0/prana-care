@@ -131,8 +131,9 @@
   justify-content: space-between;
 }
 
+
 .nav-logo {
-  font-size: 24px;
+  font-size: 30px !important; 
   font-weight: 700;
   color: #009578;
   text-decoration: none;
